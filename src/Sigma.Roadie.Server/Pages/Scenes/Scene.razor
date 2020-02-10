@@ -14,6 +14,11 @@
     }
 
 
+    async Task TrySave()
+    {
+        this.Model = await SceneService.UpdateScene(Model);
+    }
+
 }
 
 
@@ -37,6 +42,9 @@
             <FormItem Label="Duración:">
                 <input type="text" class="form-control" @bind="@Model.Duration">
             </FormItem>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary" @onclick="@TrySave">Guardar</button>
         </div>
     </div>
 
