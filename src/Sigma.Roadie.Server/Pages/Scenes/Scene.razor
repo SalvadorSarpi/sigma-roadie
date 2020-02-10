@@ -1,0 +1,77 @@
+﻿@page "/scene/{SceneId:guid}"
+
+@code {
+
+    [Parameter]
+    public Guid SceneId { get; set; }
+
+    Domain.DataModels.Scene Model;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await SceneService.GetSceneById(SceneId);
+    }
+
+
+}
+
+
+@if (Model != null)
+{
+
+    <h1>Escena: @Model.Name</h1>
+    <br />
+
+    <div class="card">
+        <div class="card-header">
+            Detalles
+        </div>
+        <div class="card-body">
+            <FormItem Label="Nombre:">
+                <input type="text" class="form-control" @bind="@Model.Name">
+            </FormItem>
+            <FormItem Label="Descripción:">
+                <input type="text" class="form-control" @bind="@Model.Description">
+            </FormItem>
+            <FormItem Label="Duración:">
+                <input type="text" class="form-control" @bind="@Model.Duration">
+            </FormItem>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="card">
+        <div class="card-header">
+            Archivos asociados
+        </div>
+        <div class="card-body">
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Nombre</th>
+                        <th>Url</th>
+                        <th>Desfase</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var file in Model.MediaFile)
+                    {
+                    <tr>
+                        <td><Sigma.Roadie.Server.Pages.Scenes.Components.MediaFileTypeLabel MediaFile="file" /></td>
+                        <td>@file.Name</td>
+                        <td>@file.Url1</td>
+                        <td>@file.PlayAt</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+}
