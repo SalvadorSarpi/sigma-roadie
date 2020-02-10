@@ -11,6 +11,7 @@ namespace Sigma.Roadie.Domain.DataModels
         public Guid SetlistId { get; set; }
         [Key]
         public Guid SceneId { get; set; }
+        public short Index { get; set; }
 
         [ForeignKey(nameof(SceneId))]
         [InverseProperty("SetlistScene")]
