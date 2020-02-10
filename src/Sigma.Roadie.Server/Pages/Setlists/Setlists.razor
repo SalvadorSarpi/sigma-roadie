@@ -1,0 +1,42 @@
+﻿@page "/setlists"
+
+@code {
+
+    List<Setlist> Model;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await SetlistService.GetSetlists();
+    }
+
+
+}
+
+
+<h1>Setlists</h1>
+
+@if (Model != null)
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @foreach (var setlist in Model)
+            {
+                <tr>
+                    <td><a href="/setlist/@setlist.SetlistId">@setlist.Name</a></td>
+                    <td>@setlist.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}

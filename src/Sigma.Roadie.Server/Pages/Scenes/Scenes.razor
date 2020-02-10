@@ -1,0 +1,44 @@
+﻿@page "/scenes"
+
+@code {
+
+    List<Scene> Model;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await SceneService.GetScenes();
+    }
+
+
+}
+
+
+<h1>Escenas</h1>
+
+@if (Model != null)
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Duración</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @foreach (var scene in Model)
+            {
+            <tr>
+                <td><a href="/scene/@scene.SceneId">@scene.Name</a></td>
+                <td>@scene.Description</td>
+                <td>@scene.Duration</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+}
