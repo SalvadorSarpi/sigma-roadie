@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigma.Roadie.Domain", "Sigm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigma.Roadie.Server", "Sigma.Roadie.Server\Sigma.Roadie.Server.csproj", "{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29509804-64A4-4666-A49F-EE7B46842B69}"
+	ProjectSection(SolutionItems) = preProject
+		ScaffoldDomain.ps1 = ScaffoldDomain.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
