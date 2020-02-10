@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Services;
 
 namespace Sigma.Roadie.Server
 {
@@ -26,6 +29,13 @@ namespace Sigma.Roadie.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            // context database
+            services.AddDbContext<RoadieEntities>(options => options.UseSqlServer(Configuration["ConnectionStrings:RoadieEntities"]));
+
+            // custom services
+            services.AddTransient<SetlistService>();
+            services.AddTransient<SceneService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
