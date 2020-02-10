@@ -20,14 +20,25 @@ namespace Sigma.Roadie.Services
         }
 
 
-        public Task<List<Setlist>> GetSetlists()
+        public async Task<List<Setlist>> GetSetlists()
         {
-            return (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) select p).ToListAsync();
+            var list = await (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) select p).ToListAsync();
+
+            foreach(var item in list)
+            {
+                item.SetlistScene = item.SetlistScene.OrderBy(q => q.Index).ToList();
+            }
+
+            return list;
         }
 
-        public Task<Setlist> GetSetlistById(Guid setlistId)
+        public async Task<Setlist> GetSetlistById(Guid setlistId)
         {
-            return (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
+            var item = await (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
+
+            item.SetlistScene = item.SetlistScene.OrderBy(q => q.Index).ToList();
+
+            return item;
         }
 
 
@@ -43,6 +54,7 @@ namespace Sigma.Roadie.Services
                     IsActive = false,
                     SetlistId = Guid.NewGuid()
                 };
+                entities.Setlist.Add(dest);
             }
 
             dest.Name = update.Name;
