@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Server.Orquestrator;
 using Sigma.Roadie.Services;
 
 namespace Sigma.Roadie.Server
@@ -29,6 +30,16 @@ namespace Sigma.Roadie.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyOrigin();
+            }));
+            services.AddSignalR();
+
 
             // context database
             services.AddDbContext<RoadieEntities>(options => options.UseSqlServer(Configuration["ConnectionStrings:RoadieEntities"]));
@@ -58,6 +69,7 @@ namespace Sigma.Roadie.Server
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<OrquestratorHub>("/orquestratorhub");
             });
         }
     }
