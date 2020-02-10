@@ -9,8 +9,8 @@ namespace Sigma.Roadie.Domain.DataModels
     {
         public Scene()
         {
+            MediaFile = new HashSet<MediaFile>();
             SetlistScene = new HashSet<SetlistScene>();
-            StoredFile = new HashSet<StoredFile>();
         }
 
         [Key]
@@ -18,12 +18,14 @@ namespace Sigma.Roadie.Domain.DataModels
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
+        [Required]
+        public string Description { get; set; }
         public TimeSpan Duration { get; set; }
         public bool IsActive { get; set; }
 
         [InverseProperty("Scene")]
-        public virtual ICollection<SetlistScene> SetlistScene { get; set; }
+        public virtual ICollection<MediaFile> MediaFile { get; set; }
         [InverseProperty("Scene")]
-        public virtual ICollection<StoredFile> StoredFile { get; set; }
+        public virtual ICollection<SetlistScene> SetlistScene { get; set; }
     }
 }

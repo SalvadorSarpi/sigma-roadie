@@ -15,10 +15,10 @@ namespace Sigma.Roadie.Domain.DataModels
         {
         }
 
+        public virtual DbSet<MediaFile> MediaFile { get; set; }
         public virtual DbSet<Scene> Scene { get; set; }
         public virtual DbSet<Setlist> Setlist { get; set; }
         public virtual DbSet<SetlistScene> SetlistScene { get; set; }
-        public virtual DbSet<StoredFile> StoredFile { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +31,17 @@ namespace Sigma.Roadie.Domain.DataModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<MediaFile>(entity =>
+            {
+                entity.Property(e => e.MediaFileId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Scene)
+                    .WithMany(p => p.MediaFile)
+                    .HasForeignKey(d => d.SceneId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StoredFile_Scene");
+            });
+
             modelBuilder.Entity<Scene>(entity =>
             {
                 entity.Property(e => e.SceneId).ValueGeneratedNever();
@@ -56,17 +67,6 @@ namespace Sigma.Roadie.Domain.DataModels
                     .HasForeignKey(d => d.SetlistId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SetlistScene_Setlist");
-            });
-
-            modelBuilder.Entity<StoredFile>(entity =>
-            {
-                entity.Property(e => e.StoredFileId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Scene)
-                    .WithMany(p => p.StoredFile)
-                    .HasForeignKey(d => d.SceneId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StoredFile_Scene");
             });
 
             OnModelCreatingPartial(modelBuilder);
