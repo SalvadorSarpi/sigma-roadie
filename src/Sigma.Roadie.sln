@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29721.120
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigma.Roadie.Domain", "Sigma.Roadie.Domain\Sigma.Roadie.Domain.csproj", "{E3BCED3A-8D57-442A-AE6F-A5587662A461}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigma.Roadie.Server", "Sigma.Roadie.Server\Sigma.Roadie.Server.csproj", "{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3BCED3A-8D57-442A-AE6F-A5587662A461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BCED3A-8D57-442A-AE6F-A5587662A461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BCED3A-8D57-442A-AE6F-A5587662A461}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BCED3A-8D57-442A-AE6F-A5587662A461}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42AE8A03-2691-4C27-B95D-D391D1ABE4B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
