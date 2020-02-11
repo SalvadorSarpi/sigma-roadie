@@ -63,7 +63,7 @@ namespace Sigma.Roadie.Services
             }
 
             dest.Name = update.Name;
-            dest.Description = update.Description;
+            dest.Description = update.Description ?? string.Empty;
 
             await entities.SaveChangesAsync();
 

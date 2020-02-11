@@ -19,6 +19,13 @@
         this.Model = await SetlistService.UpdateSetlist(Model);
     }
 
+
+    async Task TryDelete()
+    {
+        await SetlistService.RemoveSetlist(Model.SetlistId);
+        NavigationManager.NavigateTo("/setlists");
+    }
+
 }
 
 
@@ -42,6 +49,7 @@
         </div>
         <div class="card-footer">
             <button type="button" class="btn btn-primary" @onclick="@TrySave">Guardar</button>
+            <button type="button" class="btn btn-warning" @onclick="@TryDelete">Eliminar</button>
         </div>
     </div>
 
