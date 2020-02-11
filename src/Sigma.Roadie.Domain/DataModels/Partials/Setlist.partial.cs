@@ -11,7 +11,20 @@ namespace Sigma.Roadie.Domain.DataModels
     {
 
         [NotMapped]
-        public TimeSpan TotalLenght => new TimeSpan(SetlistScene.Select(q => q.Scene.Duration.Ticks).Sum());
+        public TimeSpan TotalLenght
+        {
+            get
+            {
+                try
+                {
+                    return new TimeSpan(SetlistScene.Select(q => q.Scene.Duration.Ticks).Sum());
+                }
+                catch
+                {
+                    return TimeSpan.FromSeconds(0);
+                }
+            }
+        }
 
     }
 

@@ -35,7 +35,12 @@ namespace Sigma.Roadie.Services
 
         public async Task<Setlist> GetSetlistById(Guid setlistId)
         {
-            var item = await (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
+            var item = await (from p in entities.Setlist
+                                .Include(q => q.SetlistScene)
+                                .ThenInclude(q => q.Scene)
+                                .ThenInclude(q => q.MediaFile)
+                              where p.SetlistId == setlistId
+                              select p).FirstOrDefaultAsync();
 
             if (item == null)
             {

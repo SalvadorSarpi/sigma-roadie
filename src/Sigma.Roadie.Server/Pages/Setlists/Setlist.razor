@@ -43,6 +43,9 @@
         {
             await SetlistService.RemoveSceneFromSetlist(SetlistId, sceneId);
         }
+
+        Model = await SetlistService.GetSetlistById(SetlistId);
+        AvailableScenes = await SceneService.GetScenes();
     }
 
     async Task UpdatePosition(Guid sceneId, int change)

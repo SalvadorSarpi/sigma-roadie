@@ -30,6 +30,10 @@ namespace Sigma.Roadie.Server.Orquestrator
             hub.KeepAliveInterval = TimeSpan.FromSeconds(3);
 
             await hub.StartAsync();
+
+            /*
+            hub.On<string>("PlayScene", UpdateEventHandler);
+            hub.On("StopAudio", () => PlayScene(null));*/
         }
 
 

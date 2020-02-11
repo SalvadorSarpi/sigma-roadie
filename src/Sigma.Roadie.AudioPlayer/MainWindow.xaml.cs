@@ -55,6 +55,13 @@ namespace Sigma.Roadie.AudioPlayer
         {
             SceneModel model = JsonConvert.DeserializeObject<SceneModel>(json);
 
+
+            this.Dispatcher.Invoke(() =>
+            {
+                StopAll();
+            });
+
+
             if (model != null)
             {
                 LogMessage("Comenzar: " + model.Name);
@@ -66,10 +73,6 @@ namespace Sigma.Roadie.AudioPlayer
             else
             {
                 LogMessage("Detener");
-                this.Dispatcher.Invoke(() =>
-                {
-                    StopAll();
-                });
             }
         }
 
