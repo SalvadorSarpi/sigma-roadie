@@ -2,7 +2,7 @@
 @code {
 
     [Parameter]
-    public string Title { get; set; }
+    public string Title { get; set; } = "Atención";
 
     [Parameter]
     public bool Visible { get; set; } = false;
@@ -46,10 +46,10 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Atención</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">@Title</h5>
                 </div>
                 <div class="modal-body">
-                    ¿Eliminar el setlist?
+                    @ChildContent
                 </div>
                 <div class="modal-footer">
                     @if (ShowCloseButton)

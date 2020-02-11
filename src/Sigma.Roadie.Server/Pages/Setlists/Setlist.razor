@@ -94,30 +94,16 @@
 
 }
 
-@if (IsSceneSelectorModalVisible)
-{
-    <div class="modal-backdrop fade in show"></div>
-    <div id="modal_default" class="modal show" style="display:block">
 
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Selector de escenas</h5>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @onclick="@(() => IsSceneSelectorModalVisible = false)">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
-@if (IsDeleteModalVisible)
-{
+
+<ModalComponent Visible="@IsSceneSelectorModalVisible" DeleteAction="Delete" Title="Selector de escenas" CloseAction="() => IsSceneSelectorModalVisible = false" ShowCloseButton="true">
+    aaaa
+    <br />
+    sss
+</ModalComponent>
+
+
 <ModalComponent Visible="@IsDeleteModalVisible" DeleteAction="Delete" CancelAction="() => IsDeleteModalVisible = false" ShowCancelButton="true" ShowDeleteButton="true">
     ¿Eliminar el setlist?
 </ModalComponent>
-}
