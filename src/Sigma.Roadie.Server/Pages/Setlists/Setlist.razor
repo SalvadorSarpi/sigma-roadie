@@ -45,6 +45,11 @@
         }
     }
 
+    async Task UpdatePosition(Guid sceneId, int plus)
+    {
+
+    }
+
 }
 
 
@@ -77,7 +82,7 @@
     <div class="card">
         <div class="card-header">
             Escenas asociadas
-            <button type="button" class="btn btn-primary float-right" @onclick="@(() => IsSceneSelectorModalVisible = true)"><i class="oi oi-plus"></i></button>
+            <button type="button" class="btn btn-primary btn-sm float-right" @onclick="@(() => IsSceneSelectorModalVisible = true)"><i class="oi oi-plus"></i></button>
         </div>
         <div class="card-body">
             <table class="table table-borderless">
@@ -94,7 +99,17 @@
                     @foreach (var scene in Model.SetlistScene)
                     {
                         <tr>
-                            <td>@scene.Index</td>
+                            <td>
+                                @scene.Index
+                                @if (scene.Index > 1)
+                                {
+                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="@(() => UpdatePosition(scene.SceneId, -1))"><i class="oi oi-arrow-top"></i></button>
+                                }
+                                @if (scene.Index < Model.SetlistScene.Count)
+                                {
+                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="@(() => UpdatePosition(scene.SceneId, 1))"><i class="oi oi-arrow-bottom"></i></button>
+                                }
+                            </td>
                             <td>@scene.Scene.Name</td>
                             <td>@scene.Scene.Duration</td>
                             <td><Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" /></td>

@@ -27,6 +27,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th>Duración</th>
             </tr>
         </thead>
 
@@ -34,10 +35,11 @@
         <tbody>
             @foreach (var setlist in Model)
             {
-                <tr>
-                    <td><a href="/setlist/@setlist.SetlistId">@setlist.Name</a></td>
-                    <td>@setlist.Description</td>
-                </tr>
+            <tr>
+                <td><a href="/setlist/@setlist.SetlistId">@setlist.Name</a></td>
+                <td>@setlist.Description</td>
+                <td>@setlist.TotalLenght</td>
+            </tr>
             }
         </tbody>
     </table>
