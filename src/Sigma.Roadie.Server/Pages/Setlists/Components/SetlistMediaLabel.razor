@@ -1,0 +1,16 @@
+﻿@code {
+
+    [Parameter]
+    public Scene Scene { get; set; }
+
+}
+
+
+@if (Scene != null && Scene.MediaFile.Any(q => q.TypeEnum == MediaFileType.Audio))
+{
+    <span class="badge badge-light">Audio</span>
+}
+@if (Scene != null && Scene.MediaFile.Any(q => q.TypeEnum == MediaFileType.Video))
+{
+    <span class="badge badge-secondary">Video</span>
+}

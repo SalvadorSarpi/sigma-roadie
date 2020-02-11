@@ -25,9 +25,16 @@ namespace Sigma.Roadie.Services
             return (from p in entities.Scene.Include(q => q.MediaFile) select p).ToListAsync();
         }
 
-        public Task<Scene> GetSceneById(Guid sceneId)
+        public async Task<Scene> GetSceneById(Guid sceneId)
         {
-            return (from p in entities.Scene.Include(q => q.MediaFile) where p.SceneId == sceneId select p).FirstOrDefaultAsync();
+            var item =  await (from p in entities.Scene.Include(q => q.MediaFile) where p.SceneId == sceneId select p).FirstOrDefaultAsync();
+
+            if (item == null)
+            {
+                item = new Scene();
+            }
+
+            return item;
         }
 
 

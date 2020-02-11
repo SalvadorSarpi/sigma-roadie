@@ -36,6 +36,11 @@ namespace Sigma.Roadie.Services
         {
             var item = await (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
 
+            if (item == null)
+            {
+                item = new Setlist();
+            }
+
             item.SetlistScene = item.SetlistScene.OrderBy(q => q.Index).ToList();
 
             return item;
