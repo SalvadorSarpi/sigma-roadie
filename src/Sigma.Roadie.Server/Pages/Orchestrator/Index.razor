@@ -1,0 +1,118 @@
+﻿@page "/"
+
+@code {
+
+    List<Domain.DataModels.Setlist> AvailableSetlists { get; set; }
+
+    Domain.DataModels.Setlist LoadedSetlist { get; set; }
+
+    bool Loaded = false;
+
+    Guid selectedSetlistId { get; set; } = Guid.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AvailableSetlists = await SetlistService.GetSetlists();
+
+        var active = (from p in AvailableSetlists where p.IsActive == true select p).FirstOrDefault();
+        if (active != null)
+        {
+            selectedSetlistId = active.SetlistId;
+            await LoadSetlist();
+        }
+
+        Loaded = true;
+    }
+
+
+    async Task LoadSetlist()
+    {
+        if (selectedSetlistId == Guid.Empty)
+        {
+            LoadedSetlist = null;
+        }
+        else
+        {
+            LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
+        }
+
+        await SetlistService.SetActiveSetlist(selectedSetlistId);
+    }
+
+
+}
+
+
+<h1>Roadie</h1>
+
+
+@if (Loaded)
+{
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Reproduciendo
+                </div>
+                <div class="card-body">
+                    <FormItem Label="Nombre:">
+                        <select class="form-control" @onchange="(e) => selectedSetlistId = Guid.Parse(e.Value.ToString())">
+                            <option value="@Guid.Empty">Ninguno</option>
+
+                            @foreach (var setlist in AvailableSetlists)
+                            {
+                                <option value="@setlist.SetlistId" selected="@setlist.IsActive">@setlist.Name</option>
+                            }
+                        </select>
+                    </FormItem>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+   
+
+    @if (LoadedSetlist != null)
+    {
+        
+            <div class="card">
+                <div class="card-header">
+                    Setlist: @LoadedSetlist.Name
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Nombre</th>
+                                <th>Duración</th>
+                                <th>Contiene</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var scene in LoadedSetlist.SetlistScene)
+                            {
+                                <tr>
+                                    <td>@scene.Index</td>
+                                    <td>@scene.Scene.Name</td>
+                                    <td>@scene.Scene.Duration</td>
+                                    <td><Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" /></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    
+                </div>
+            </div>
+    }
+
+}

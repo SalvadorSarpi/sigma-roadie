@@ -71,6 +71,26 @@ namespace Sigma.Roadie.Services
         }
 
 
+        public async Task<Setlist> SetActiveSetlist(Guid setlistId)
+        {
+            var allsets = await entities.Setlist.ToListAsync();
+            allsets.ForEach(q => q.IsActive = false);
+            var allscenes = await entities.Scene.ToListAsync();
+            allscenes.ForEach(q => q.IsActive = false);
+
+            var dest = await (from p in entities.Setlist where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
+
+            if (dest != null)
+            {
+                dest.IsActive = true;
+
+                await entities.SaveChangesAsync();
+            }
+
+            return dest;
+        }
+
+
         public async Task RemoveSetlist(Guid setlistId)
         {
             var dest = await (from p in entities.Setlist where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
