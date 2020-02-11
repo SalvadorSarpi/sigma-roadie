@@ -45,9 +45,10 @@
         }
     }
 
-    async Task UpdatePosition(Guid sceneId, int plus)
+    async Task UpdatePosition(Guid sceneId, int change)
     {
-
+        await SetlistService.UpdateSceneIndexInSetlist(SetlistId, sceneId, change);
+        Model = await SetlistService.GetSetlistById(SetlistId);
     }
 
 }
@@ -69,6 +70,9 @@
             </FormItem>
             <FormItem Label="Descripción:">
                 <input type="text" class="form-control" @bind="@Model.Description">
+            </FormItem>
+            <FormItem Label="Duración total:">
+                @Model.TotalLenght
             </FormItem>
         </div>
         <div class="card-footer">

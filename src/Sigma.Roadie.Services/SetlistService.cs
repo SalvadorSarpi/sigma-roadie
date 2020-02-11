@@ -113,7 +113,37 @@ namespace Sigma.Roadie.Services
                 entities.Remove(rel);
 
                 await entities.SaveChangesAsync();
+
+                await ReorderIndexes(setlistId);
             }
+        }
+
+
+        public async Task UpdateSceneIndexInSetlist(Guid setlistId, Guid sceneId, int change)
+        {
+            var scenes = await (from p in entities.SetlistScene where p.SetlistId == setlistId select p).ToListAsync();
+
+            var i0 = scenes.FirstOrDefault(p => p.SceneId == sceneId);
+            var i1 = scenes.FirstOrDefault(p => p.Index == i0.Index + change);
+
+            var io = i0.Index;
+            i0.Index = i1.Index;
+            i1.Index = io;
+
+            await entities.SaveChangesAsync();
+        }
+
+
+        async Task ReorderIndexes(Guid setlistId)
+        {
+            var scenes = await (from p in entities.SetlistScene where p.SetlistId == setlistId orderby p.Index select p).ToListAsync();
+
+            for(var nindex = 0; nindex < scenes.Count; nindex++)
+            {
+                scenes[nindex].Index = Convert.ToInt16(nindex + 1);
+            }
+
+            await entities.SaveChangesAsync();
         }
 
 

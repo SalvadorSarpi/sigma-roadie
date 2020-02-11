@@ -16,6 +16,8 @@
 
 <h1>Escenas</h1>
 <br />
+<a class="btn btn-primary" href="/scene/@Guid.Empty">Agregar Escena</a>
+<br />
 
 @if (Model != null)
 {
@@ -33,11 +35,11 @@
         <tbody>
             @foreach (var scene in Model)
             {
-            <tr>
-                <td><a href="/scene/@scene.SceneId">@scene.Name</a></td>
-                <td>@scene.Description</td>
-                <td>@scene.Duration</td>
-            </tr>
+                <tr>
+                    <td><a href="/scene/@scene.SceneId">@scene.Name</a></td>
+                    <td>@scene.Description</td>
+                    <td>@scene.Duration</td>
+                </tr>
             }
         </tbody>
     </table>

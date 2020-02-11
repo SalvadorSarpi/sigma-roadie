@@ -49,6 +49,7 @@ namespace Sigma.Roadie.Services
                     IsActive = false,
                     SceneId = Guid.NewGuid()
                 };
+                entities.Scene.Add(dest);
             }
 
             dest.Name = update.Name;
