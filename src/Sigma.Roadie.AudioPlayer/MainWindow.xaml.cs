@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,8 +15,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 using Sigma.Roadie.Domain.DataModels;
 using Sigma.Roadie.Domain.Models;
 
@@ -27,10 +26,9 @@ namespace Sigma.Roadie.AudioPlayer
     public partial class MainWindow : Window
     {
 
-        private WaveOutEvent outputDevice;
-        private AudioFileReader audioFile;
-
         HubConnection hub;
+
+        List<Player> players = new List<Player>();
 
         public MainWindow()
         {
@@ -47,14 +45,20 @@ namespace Sigma.Roadie.AudioPlayer
 
             hub.On<SceneModel>("PlayScene", PlayScene);
             hub.On("StopAudio", () => PlayScene(null));
+
+            txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         }
 
 
-        void PlayScene(SceneModel scene)
+        void PlayScene(SceneModel model)
         {
-            if (scene != null)
+            if (model != null)
             {
-                LogMessage("Comenzar: " + scene.Name);
+                LogMessage("Comenzar: " + model.Name);
+                this.Dispatcher.Invoke(() =>
+                {
+                    PlayAudio(model);
+                });
             }
             else
             {
@@ -72,21 +76,19 @@ namespace Sigma.Roadie.AudioPlayer
         }
 
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void PlayAudio(SceneModel model)
         {
-            /*
-
-            if (outputDevice == null)
+            foreach (var file in model.MediaFiles)
             {
-                outputDevice = new WaveOutEvent();
-                //outputDevice.PlaybackStopped += OnPlaybackStopped;
+                players.Add(new Player(file));
             }
-            if (audioFile == null)
-            {
-                audioFile = new AudioFileReader(@"D:\Media\Música\MP3\Pink Floyd\1987 - A Momentary Lapse Of Reason\07 - A New Machine (Part 1).mp3");
-                outputDevice.Init(audioFile);
-            }
-            outputDevice.Play();*/
         }
+
+
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            await hub.StopAsync();
+        }
+
     }
 }

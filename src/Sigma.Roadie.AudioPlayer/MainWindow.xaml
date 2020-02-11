@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sigma.Roadie.AudioPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
+        
+        <TextBox x:Name="txt" AcceptsReturn="True" Margin="0,40,0,0" />
 
-        <Button Height="40" Width="100" Content="Cl" Click="Button_Click" />
-
-        <TextBlock Height="400" Width="300" HorizontalAlignment="Left" x:Name="txt" />
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left" Content="Ruta actual" Height="30" Margin="5" />
 
     </Grid>
 </Window>

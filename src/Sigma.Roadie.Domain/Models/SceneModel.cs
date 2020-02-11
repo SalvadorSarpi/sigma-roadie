@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sigma.Roadie.Domain.DataModels.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,7 +26,11 @@ namespace Sigma.Roadie.Domain.Models
 
         public Guid MediaFileId { get; set; }
 
+        public MediaFileType Type { get; set; }
+
         public string LocalUri { get; set; }
+
+        public TimeSpan PlayAt { get; set; }
 
     }
 
