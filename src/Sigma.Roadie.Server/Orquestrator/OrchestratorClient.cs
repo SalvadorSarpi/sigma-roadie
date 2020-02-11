@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +32,54 @@ namespace Sigma.Roadie.Server.Orquestrator
         }
 
 
-        public async Task SendPlaySceneCommand(Guid sceneId)
+        public async Task SendPlaySceneCommand(Scene scene)
         {
-            await hub.InvokeAsync<string>("PlayScene", sceneId).ContinueWith(task1 =>
+            SceneModel model = null;
+
+            if (scene != null)
+            {
+                model = new SceneModel()
+                {
+                    SceneId = scene.SceneId,
+                    Name = scene.Name,
+                    MediaFiles = (from p in scene.MediaFile
+                                  select new MediaFileModel()
+                                  {
+                                      MediaFileId = p.MediaFileId,
+                                      LocalUri = p.Url1
+                                  }).ToList()
+                };
+            }
+
+            await hub.InvokeAsync<bool>("PlayScene", model).ContinueWith(task1 =>
             {
                 if (task1.IsFaulted)
                 {
                     
+                }
+            });
+        }
+
+
+        public async Task StopVideo()
+        {
+            await hub.InvokeAsync<bool>("StopVideo").ContinueWith(task1 =>
+            {
+                if (task1.IsFaulted)
+                {
+
+                }
+            });
+        }
+
+
+        public async Task StopAudio()
+        {
+            await hub.InvokeAsync<bool>("StopAudio").ContinueWith(task1 =>
+            {
+                if (task1.IsFaulted)
+                {
+
                 }
             });
         }

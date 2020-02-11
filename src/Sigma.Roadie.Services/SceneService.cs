@@ -22,7 +22,7 @@ namespace Sigma.Roadie.Services
 
         public Task<List<Scene>> GetScenes()
         {
-            return (from p in entities.Scene.Include(q => q.MediaFile) select p).AsNoTracking().ToListAsync();
+            return (from p in entities.Scene.Include(q => q.MediaFile) orderby p.Name select p).AsNoTracking().ToListAsync();
         }
 
         public async Task<Scene> GetSceneById(Guid sceneId)

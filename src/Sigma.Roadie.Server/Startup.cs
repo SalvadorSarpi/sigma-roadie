@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
 using Sigma.Roadie.Server.Orquestrator;
 using Sigma.Roadie.Services;
@@ -38,7 +39,10 @@ namespace Sigma.Roadie.Server
                     .AllowCredentials()
                     .AllowAnyOrigin();
             }));
-            services.AddSignalR();
+            services.AddSignalR().AddNewtonsoftJsonProtocol(o =>
+            {
+                o.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             /*
             var dbBuilder = new DbContextOptionsBuilder<RoadieEntities>().UseSqlServer(Configuration.GetConnectionString("RoadieEntities"));

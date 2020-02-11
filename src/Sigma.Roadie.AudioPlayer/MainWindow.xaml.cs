@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Domain.Models;
 
 namespace Sigma.Roadie.AudioPlayer
 {
@@ -43,39 +45,35 @@ namespace Sigma.Roadie.AudioPlayer
 
             hub.StartAsync();
 
-            hub.On<Guid>("PlayScene", (sceneId) =>
-            {
-                MessageReceived(sceneId.ToString());
-            });
+            hub.On<SceneModel>("PlayScene", PlayScene);
+            hub.On("StopAudio", () => PlayScene(null));
         }
 
 
-        void MessageReceived(string message)
+        void PlayScene(SceneModel scene)
+        {
+            if (scene != null)
+            {
+                LogMessage("Comenzar: " + scene.Name);
+            }
+            else
+            {
+                LogMessage("Detener");
+            }
+        }
+
+
+        void LogMessage(string message)
         {
             this.Dispatcher.Invoke(() =>
             {
-                txt.Text += message;
+                txt.Text += message + Environment.NewLine;
             });
         }
 
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            // To send messages:
-            await hub.InvokeAsync<string>("broadcastMessage", "aaa", "bbb").ContinueWith(task1 =>
-            {
-                if (task1.IsFaulted)
-                {
-                    MessageReceived($"There was an error calling send: {task1.Exception.GetBaseException()}");
-                }
-                else
-                {
-                    MessageReceived(task1.Result);
-                }
-            });
-            */
-
             /*
 
             if (outputDevice == null)

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +19,26 @@ namespace Sigma.Roadie.Server.Orquestrator
         }
 
 
-        public void PlayScene(Guid sceneId)
+        public bool PlayScene(SceneModel scene)
         {
-            Clients.All.SendAsync("PlayScene", sceneId);
+            Clients.All.SendAsync("PlayScene", scene);
+
+            return true;
+        }
+
+
+        public bool StopVideo()
+        {
+            Clients.All.SendAsync("StopVideo");
+
+            return true;
+        }
+
+        public bool StopAudio()
+        {
+            Clients.All.SendAsync("StopAudio");
+
+            return true;
         }
 
 

@@ -48,15 +48,29 @@
     async Task PlayNext()
     {
         CurrentScene = await SceneService.PlayNextScene(LoadedSetlist.SetlistId);
-        await orchestrator.SendPlaySceneCommand(CurrentScene?.SceneId ?? Guid.Empty);
+        await orchestrator.SendPlaySceneCommand(CurrentScene?.Scene);
     }
 
     async Task PlayScene(Guid sceneId)
     {
         CurrentScene = await SceneService.PlayScene(LoadedSetlist.SetlistId, sceneId);
-        await orchestrator.SendPlaySceneCommand(CurrentScene?.SceneId ?? Guid.Empty);
+        await orchestrator.SendPlaySceneCommand(CurrentScene?.Scene);
     }
 
+    async Task Stop()
+    {
+        await orchestrator.SendPlaySceneCommand(null);
+    }
+
+    async Task StopAudio()
+    {
+        await orchestrator.StopAudio();
+    }
+
+    async Task StopVideo()
+    {
+        await orchestrator.StopVideo();
+    }
 
 }
 
@@ -115,7 +129,10 @@
                     }
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-success" @onclick="PlayNext"><i class="oi oi-play-circle"></i></button>
+                    <button type="button" class="btn btn-success" @onclick="PlayNext">Siguiente <i class="oi oi-media-step-forward"></i></button>
+                    <button type="button" class="btn btn-danger" @onclick="Stop"><i class="oi oi-media-stop"></i></button>
+                    <button type="button" class="btn btn-warning" @onclick="StopVideo"><i class="oi oi-video"></i></button>
+                    <button type="button" class="btn btn-warning" @onclick="StopAudio"><i class="oi oi-audio"></i></button>
                 </div>
             </div>
         </div>
