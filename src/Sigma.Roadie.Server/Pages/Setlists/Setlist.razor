@@ -7,6 +7,9 @@
 
     Domain.DataModels.Setlist Model;
 
+    bool IsSceneSelectorModalVisible { get; set; } = false;
+    bool IsDeleteModalVisible { get; set; } = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -20,7 +23,7 @@
     }
 
 
-    async Task TryDelete()
+    async Task Delete()
     {
         await SetlistService.RemoveSetlist(Model.SetlistId);
         NavigationManager.NavigateTo("/setlists");
@@ -49,7 +52,7 @@
         </div>
         <div class="card-footer">
             <button type="button" class="btn btn-primary" @onclick="@TrySave">Guardar</button>
-            <button type="button" class="btn btn-warning" @onclick="@TryDelete">Eliminar</button>
+            <button type="button" class="btn btn-warning" @onclick="@(() => IsDeleteModalVisible = true)">Eliminar</button>
         </div>
     </div>
 
@@ -58,6 +61,7 @@
     <div class="card">
         <div class="card-header">
             Escenas asociadas
+            <button type="button" class="btn btn-primary float-right" @onclick="@(() => IsSceneSelectorModalVisible = true)"><i class="oi oi-plus"></i></button>
         </div>
         <div class="card-body">
             <table class="table table-borderless">
@@ -87,4 +91,33 @@
 
 
 
+
+}
+
+@if (IsSceneSelectorModalVisible)
+{
+    <div class="modal-backdrop fade in show"></div>
+    <div id="modal_default" class="modal show" style="display:block">
+
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Selector de escenas</h5>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="@(() => IsSceneSelectorModalVisible = false)">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsDeleteModalVisible)
+{
+<ModalComponent Visible="@IsDeleteModalVisible" DeleteAction="Delete" CancelAction="() => IsDeleteModalVisible = false" ShowCancelButton="true" ShowDeleteButton="true">
+    ¿Eliminar el setlist?
+</ModalComponent>
 }

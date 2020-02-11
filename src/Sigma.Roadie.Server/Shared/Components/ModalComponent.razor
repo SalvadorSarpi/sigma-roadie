@@ -1,0 +1,78 @@
+﻿
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public bool Visible { get; set; } = false;
+
+    [Parameter]
+    public bool ShowCloseButton { get; set; } = false;
+
+    [Parameter]
+    public bool ShowCancelButton { get; set; } = false;
+
+    [Parameter]
+    public bool ShowSaveButton { get; set; } = false;
+
+    [Parameter]
+    public bool ShowDeleteButton { get; set; } = false;
+
+
+    [Parameter]
+    public EventCallback CloseAction { get; set; }
+
+    [Parameter]
+    public EventCallback CancelAction{ get; set; }
+
+    [Parameter]
+    public EventCallback SaveAction { get; set; }
+
+    [Parameter]
+    public EventCallback DeleteAction { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+}
+
+
+@if (Visible)
+{
+    <div class="modal-backdrop fade in show"></div>
+    <div id="modal_default" class="modal show" style="display:block">
+
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Atención</h5>
+                </div>
+                <div class="modal-body">
+                    ¿Eliminar el setlist?
+                </div>
+                <div class="modal-footer">
+                    @if (ShowCloseButton)
+                    {
+                        <button type="button" class="btn btn-secondary" @onclick="@CloseAction">Cerrar</button>
+                    }
+
+                    @if (ShowCancelButton)
+                    {
+                        <button type="button" class="btn btn-secondary" @onclick="@CancelAction">Cancelar</button>
+                    }
+
+                    @if (ShowSaveButton)
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="@SaveAction">Guardar</button>
+                    }
+
+                    @if (ShowDeleteButton)
+                    {
+                        <button type="button" class="btn btn-danger" @onclick="@DeleteAction">Eliminar</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

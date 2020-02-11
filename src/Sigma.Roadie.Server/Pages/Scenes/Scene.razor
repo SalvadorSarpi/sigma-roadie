@@ -5,7 +5,7 @@
     [Parameter]
     public Guid SceneId { get; set; }
 
-    Domain.DataModels.Scene Model;
+    Domain.DataModels.Scene Model { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -18,6 +18,7 @@
     {
         this.Model = await SceneService.UpdateScene(Model);
     }
+
 
 }
 
@@ -68,18 +69,17 @@
                 <tbody>
                     @foreach (var file in Model.MediaFile)
                     {
-                    <tr>
-                        <td><Sigma.Roadie.Server.Pages.Scenes.Components.MediaFileTypeLabel MediaFile="file" /></td>
-                        <td>@file.Name</td>
-                        <td>@file.Url1</td>
-                        <td>@file.PlayAt</td>
-                    </tr>
+                        <tr>
+                            <td><Sigma.Roadie.Server.Pages.Scenes.Components.MediaFileTypeLabel MediaFile="file" /></td>
+                            <td>@file.Name</td>
+                            <td>@file.Url1</td>
+                            <td>@file.PlayAt</td>
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-
 
 
 }
