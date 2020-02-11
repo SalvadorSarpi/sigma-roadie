@@ -5,6 +5,7 @@
     List<Domain.DataModels.Setlist> AvailableSetlists { get; set; }
 
     Domain.DataModels.Setlist LoadedSetlist { get; set; }
+    Domain.DataModels.SetlistScene CurrentScene { get; set; }
 
     bool Loaded = false;
 
@@ -18,7 +19,8 @@
         if (active != null)
         {
             selectedSetlistId = active.SetlistId;
-            await LoadSetlist();
+            LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
+            CurrentScene = await SceneService.GetActiveScene();
         }
 
         Loaded = true;
@@ -40,6 +42,17 @@
     }
 
 
+    async Task PlayNext()
+    {
+        CurrentScene = await SceneService.PlayNextScene(LoadedSetlist.SetlistId);
+    }
+
+    async Task PlayScene(Guid sceneId)
+    {
+        CurrentScene = await SceneService.PlayScene(LoadedSetlist.SetlistId, sceneId);
+    }
+
+
 }
 
 
@@ -49,31 +62,60 @@
 @if (Loaded)
 {
 
-    <div class="row">
+<div class="row">
 
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Setlist
+            </div>
+            <div class="card-body">
+                <FormItem Label="Setlist:">
+                    <select class="form-control" @onchange="(e) => selectedSetlistId = Guid.Parse(e.Value.ToString())">
+                        <option value="@Guid.Empty">Ninguno</option>
+
+                        @foreach (var setlist in AvailableSetlists)
+                        {
+                            <option value="@setlist.SetlistId" selected="@setlist.IsActive">@setlist.Name</option>
+                        }
+                    </select>
+                </FormItem>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
+            </div>
+        </div>
+    </div>
+
+    @if (LoadedSetlist != null)
+    {
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     Reproduciendo
                 </div>
                 <div class="card-body">
-                    <FormItem Label="Nombre:">
-                        <select class="form-control" @onchange="(e) => selectedSetlistId = Guid.Parse(e.Value.ToString())">
-                            <option value="@Guid.Empty">Ninguno</option>
-
-                            @foreach (var setlist in AvailableSetlists)
-                            {
-                                <option value="@setlist.SetlistId" selected="@setlist.IsActive">@setlist.Name</option>
-                            }
-                        </select>
+                    <FormItem Label="Setlist:">
+                        @LoadedSetlist.Name
                     </FormItem>
+
+                    @if (CurrentScene != null)
+                    {
+                        <FormItem Label="Escena:">
+                            <strong>@CurrentScene.Scene.Name</strong>
+                        </FormItem>
+                        <FormItem Label="Duración:">
+                            @CurrentScene.Scene.Duration
+                        </FormItem>
+                    }
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
+                    <button type="button" class="btn btn-success" @onclick="PlayNext"><i class="oi oi-play-circle"></i></button>
                 </div>
             </div>
         </div>
-    </div>
+    }
+</div>
 
     <br />
    
@@ -89,6 +131,7 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Posición</th>
                                 <th>Nombre</th>
                                 <th>Duración</th>
@@ -100,6 +143,9 @@
                             @foreach (var scene in LoadedSetlist.SetlistScene)
                             {
                                 <tr>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm" @onclick="() => PlayScene(scene.SceneId)"><i class="oi oi-play-circle"></i></button>
+                                    </td>
                                     <td>@scene.Index</td>
                                     <td>@scene.Scene.Name</td>
                                     <td>@scene.Scene.Duration</td>

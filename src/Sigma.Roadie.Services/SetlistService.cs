@@ -24,13 +24,14 @@ namespace Sigma.Roadie.Services
         {
             var list = await (from p in entities.Setlist.Include(q => q.SetlistScene).ThenInclude(q => q.Scene) select p).ToListAsync();
 
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 item.SetlistScene = item.SetlistScene.OrderBy(q => q.Index).ToList();
             }
 
             return list;
         }
+
 
         public async Task<Setlist> GetSetlistById(Guid setlistId)
         {
@@ -75,7 +76,7 @@ namespace Sigma.Roadie.Services
         {
             var allsets = await entities.Setlist.ToListAsync();
             allsets.ForEach(q => q.IsActive = false);
-            var allscenes = await entities.Scene.ToListAsync();
+            var allscenes = await entities.SetlistScene.ToListAsync();
             allscenes.ForEach(q => q.IsActive = false);
 
             var dest = await (from p in entities.Setlist where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
@@ -115,7 +116,8 @@ namespace Sigma.Roadie.Services
             {
                 SceneId = sceneId,
                 SetlistId = setlistId,
-                Index = Convert.ToInt16(index)
+                Index = Convert.ToInt16(index),
+                IsActive = false
             };
 
             entities.SetlistScene.Add(rel);
@@ -158,7 +160,7 @@ namespace Sigma.Roadie.Services
         {
             var scenes = await (from p in entities.SetlistScene where p.SetlistId == setlistId orderby p.Index select p).ToListAsync();
 
-            for(var nindex = 0; nindex < scenes.Count; nindex++)
+            for (var nindex = 0; nindex < scenes.Count; nindex++)
             {
                 scenes[nindex].Index = Convert.ToInt16(nindex + 1);
             }

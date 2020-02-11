@@ -21,7 +21,6 @@ namespace Sigma.Roadie.Domain.DataModels
         [Required]
         public string Description { get; set; }
         public TimeSpan Duration { get; set; }
-        public bool IsActive { get; set; }
 
         [InverseProperty("Scene")]
         public virtual ICollection<MediaFile> MediaFile { get; set; }

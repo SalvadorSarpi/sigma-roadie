@@ -40,7 +40,9 @@ namespace Sigma.Roadie.Server
             }));
             services.AddSignalR();
 
-
+            /*
+            var dbBuilder = new DbContextOptionsBuilder<RoadieEntities>().UseSqlServer(Configuration.GetConnectionString("RoadieEntities"));
+            services.AddSingleton<DbContextOptions<RoadieEntities>>(dbBuilder.Options);*/
             // context database
             services.AddDbContext<RoadieEntities>(options => options.UseSqlServer(Configuration["ConnectionStrings:RoadieEntities"]));
 

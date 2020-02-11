@@ -22,12 +22,12 @@ namespace Sigma.Roadie.Services
 
         public Task<List<Scene>> GetScenes()
         {
-            return (from p in entities.Scene.Include(q => q.MediaFile) select p).ToListAsync();
+            return (from p in entities.Scene.Include(q => q.MediaFile) select p).AsNoTracking().ToListAsync();
         }
 
         public async Task<Scene> GetSceneById(Guid sceneId)
         {
-            var item =  await (from p in entities.Scene.Include(q => q.MediaFile) where p.SceneId == sceneId select p).FirstOrDefaultAsync();
+            var item = await (from p in entities.Scene.Include(q => q.MediaFile) where p.SceneId == sceneId select p).AsNoTracking().FirstOrDefaultAsync();
 
             if (item == null)
             {
@@ -35,6 +35,18 @@ namespace Sigma.Roadie.Services
             }
 
             return item;
+        }
+
+
+        public async Task<SetlistScene> GetActiveScene()
+        {
+            var active = await (from p in entities.SetlistScene
+                                    .Include(q => q.Scene)
+                                    .ThenInclude(q => q.MediaFile)
+                                where p.IsActive == true
+                                select p).AsNoTracking().FirstOrDefaultAsync();
+
+            return active;
         }
 
 
@@ -46,7 +58,6 @@ namespace Sigma.Roadie.Services
             {
                 dest = new Scene()
                 {
-                    IsActive = false,
                     SceneId = Guid.NewGuid()
                 };
                 entities.Scene.Add(dest);
@@ -108,6 +119,38 @@ namespace Sigma.Roadie.Services
             entities.Remove(rel);
 
             await entities.SaveChangesAsync();
+        }
+
+
+        public async Task<SetlistScene> PlayNextScene(Guid setlistId)
+        {
+            var active = await GetActiveScene();
+
+            int nextIndex = (active?.Index ?? 0) + 1;
+
+            var next = await (from p in entities.SetlistScene
+                              where p.SetlistId == setlistId && p.Index == nextIndex
+                              select p).AsNoTracking().FirstOrDefaultAsync();
+
+            return await PlayScene(setlistId, next.SceneId);
+        }
+
+
+        public async Task<SetlistScene> PlayScene(Guid setlistId, Guid sceneId)
+        {
+            var allscenes = await entities.SetlistScene.ToListAsync();
+            allscenes.ForEach(q => q.IsActive = false);
+
+            var next = await (from p in entities.SetlistScene where p.SetlistId == setlistId && p.SceneId == sceneId select p).FirstOrDefaultAsync();
+
+            if (next != null)
+            {
+                next.IsActive = true;
+            }
+
+            await entities.SaveChangesAsync();
+
+            return await GetActiveScene();
         }
 
 
