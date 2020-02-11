@@ -1,8 +1,7 @@
 ﻿<Application x:Class="Sigma.Roadie.AudioPlayer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Sigma.Roadie.AudioPlayer"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:Sigma.Roadie.AudioPlayer">
     <Application.Resources>
          
     </Application.Resources>

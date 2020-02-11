@@ -8,5 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
+        <Button Height="40" Width="100" Content="Cl" Click="Button_Click" />
+
     </Grid>
 </Window>
