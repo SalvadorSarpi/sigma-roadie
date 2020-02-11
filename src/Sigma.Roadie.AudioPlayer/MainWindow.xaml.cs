@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,8 +35,43 @@ namespace Sigma.Roadie.AudioPlayer
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        void MessageReceived(string message)
         {
+            this.Dispatcher.Invoke(() =>
+            {
+                txt.Text += message;
+            });
+        }
+
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var myHub = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/orchestratorhub")
+                .Build();
+
+            myHub.On<string, string>("broadcastMessage", (s1, s2) =>
+            {
+                MessageReceived(s1 + ": " + s2);
+            });
+
+            // To send messages:
+            await myHub.InvokeAsync<string>("broadcastMessage", "aaa", "bbb").ContinueWith(task1 =>
+            {
+                if (task1.IsFaulted)
+                {
+                    MessageReceived($"There was an error calling send: {task1.Exception.GetBaseException()}");
+                }
+                else
+                {
+                    MessageReceived(task1.Result);
+                }
+            });
+
+
+            /*
+
             if (outputDevice == null)
             {
                 outputDevice = new WaveOutEvent();
@@ -46,7 +82,7 @@ namespace Sigma.Roadie.AudioPlayer
                 audioFile = new AudioFileReader(@"D:\Media\Música\MP3\Pink Floyd\1987 - A Momentary Lapse Of Reason\07 - A New Machine (Part 1).mp3");
                 outputDevice.Init(audioFile);
             }
-            outputDevice.Play();
+            outputDevice.Play();*/
         }
     }
 }

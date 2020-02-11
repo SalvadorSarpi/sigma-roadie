@@ -10,5 +10,7 @@
 
         <Button Height="40" Width="100" Content="Cl" Click="Button_Click" />
 
+        <TextBlock Height="400" Width="300" HorizontalAlignment="Left" x:Name="txt" />
+
     </Grid>
 </Window>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Sigma.Roadie.Server.Orquestrator
 {
 
-    public class OrquestratorHub : Hub
+    public class OrchestratorHub : Hub
     {
 
         public override Task OnConnectedAsync()

@@ -71,7 +71,7 @@ namespace Sigma.Roadie.Server
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
-                endpoints.MapHub<OrquestratorHub>("/orquestratorhub");
+                endpoints.MapHub<OrchestratorHub>("/orchestratorhub");
             });
         }
     }
