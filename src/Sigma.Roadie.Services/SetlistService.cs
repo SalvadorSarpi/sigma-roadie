@@ -84,9 +84,9 @@ namespace Sigma.Roadie.Services
             if (dest != null)
             {
                 dest.IsActive = true;
-
-                await entities.SaveChangesAsync();
             }
+
+            await entities.SaveChangesAsync();
 
             return dest;
         }

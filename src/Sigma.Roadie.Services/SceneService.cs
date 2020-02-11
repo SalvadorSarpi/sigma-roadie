@@ -132,7 +132,7 @@ namespace Sigma.Roadie.Services
                               where p.SetlistId == setlistId && p.Index == nextIndex
                               select p).AsNoTracking().FirstOrDefaultAsync();
 
-            return await PlayScene(setlistId, next.SceneId);
+            return await PlayScene(setlistId, next?.SceneId ?? Guid.Empty);
         }
 
 

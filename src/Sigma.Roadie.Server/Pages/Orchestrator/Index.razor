@@ -29,16 +29,18 @@
 
     async Task LoadSetlist()
     {
+        await SetlistService.SetActiveSetlist(selectedSetlistId);
+
         if (selectedSetlistId == Guid.Empty)
         {
             LoadedSetlist = null;
+            CurrentScene = null;
         }
         else
         {
             LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
+            CurrentScene = await SceneService.GetActiveScene();
         }
-
-        await SetlistService.SetActiveSetlist(selectedSetlistId);
     }
 
 
