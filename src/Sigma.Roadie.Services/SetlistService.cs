@@ -86,10 +86,16 @@ namespace Sigma.Roadie.Services
 
         public async Task AddSceneToSetlist(Guid setlistId, Guid sceneId)
         {
+            if (entities.SetlistScene.Any(q => q.SetlistId == setlistId && q.SceneId == sceneId)) return;
+
+
+            int index = await (from p in entities.SetlistScene where p.SetlistId == setlistId select p).CountAsync() + 1;
+
             var rel = new SetlistScene()
             {
                 SceneId = sceneId,
-                SetlistId = setlistId
+                SetlistId = setlistId,
+                Index = Convert.ToInt16(index)
             };
 
             entities.SetlistScene.Add(rel);
@@ -102,9 +108,12 @@ namespace Sigma.Roadie.Services
         {
             var rel = await (from p in entities.SetlistScene where p.SetlistId == setlistId && p.SceneId == sceneId select p).FirstOrDefaultAsync();
 
-            entities.Remove(rel);
+            if (rel != null)
+            {
+                entities.Remove(rel);
 
-            await entities.SaveChangesAsync();
+                await entities.SaveChangesAsync();
+            }
         }
 
 

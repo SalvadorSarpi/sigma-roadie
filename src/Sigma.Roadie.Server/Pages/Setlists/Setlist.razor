@@ -6,6 +6,7 @@
     public Guid SetlistId { get; set; }
 
     Domain.DataModels.Setlist Model;
+    List<Domain.DataModels.Scene> AvailableScenes { get; set; }
 
     bool IsSceneSelectorModalVisible { get; set; } = false;
     bool IsDeleteModalVisible { get; set; } = false;
@@ -14,12 +15,15 @@
     protected override async Task OnInitializedAsync()
     {
         Model = await SetlistService.GetSetlistById(SetlistId);
+
+        AvailableScenes = await SceneService.GetScenes();
     }
 
 
     async Task TrySave()
     {
         this.Model = await SetlistService.UpdateSetlist(Model);
+        this.SetlistId = Model.SetlistId;
     }
 
 
@@ -27,6 +31,18 @@
     {
         await SetlistService.RemoveSetlist(Model.SetlistId);
         NavigationManager.NavigateTo("/setlists");
+    }
+
+    async Task Change(bool Selected, Guid sceneId)
+    {
+        if (Selected)
+        {
+            await SetlistService.AddSceneToSetlist(SetlistId, sceneId);
+        }
+        else
+        {
+            await SetlistService.RemoveSceneFromSetlist(SetlistId, sceneId);
+        }
     }
 
 }
@@ -98,9 +114,30 @@
 
 
 <ModalComponent Visible="@IsSceneSelectorModalVisible" DeleteAction="Delete" Title="Selector de escenas" CloseAction="() => IsSceneSelectorModalVisible = false" ShowCloseButton="true">
-    aaaa
-    <br />
-    sss
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Duración</th>
+                <th>Contiene</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var scene in AvailableScenes)
+            {
+                var isSelected = Model.SetlistScene.Any(q => q.SceneId == scene.SceneId);
+
+                <tr>
+                    <td><input type="checkbox" class="form-check-input" checked="@isSelected" @onchange="(e) => Change((bool)e.Value, scene.SceneId)"></td>
+                    <td>@scene.Name</td>
+                    <td>@scene.Duration</td>
+                    <td><Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </ModalComponent>
 
 

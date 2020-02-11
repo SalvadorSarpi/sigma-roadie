@@ -17,6 +17,7 @@
     async Task TrySave()
     {
         this.Model = await SceneService.UpdateScene(Model);
+        SceneId = Model.SceneId;
     }
 
 
