@@ -28,11 +28,25 @@ namespace Sigma.Roadie.AudioPlayer
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
 
+        HubConnection hub;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            hub = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/orchestratorhub")
+                .WithAutomaticReconnect()
+                .Build();
 
+            hub.KeepAliveInterval = TimeSpan.FromSeconds(3);
+
+            hub.StartAsync();
+
+            hub.On<Guid>("PlayScene", (sceneId) =>
+            {
+                MessageReceived(sceneId.ToString());
+            });
         }
 
 
@@ -47,17 +61,9 @@ namespace Sigma.Roadie.AudioPlayer
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var myHub = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/orchestratorhub")
-                .Build();
-
-            myHub.On<string, string>("broadcastMessage", (s1, s2) =>
-            {
-                MessageReceived(s1 + ": " + s2);
-            });
-
+            /*
             // To send messages:
-            await myHub.InvokeAsync<string>("broadcastMessage", "aaa", "bbb").ContinueWith(task1 =>
+            await hub.InvokeAsync<string>("broadcastMessage", "aaa", "bbb").ContinueWith(task1 =>
             {
                 if (task1.IsFaulted)
                 {
@@ -68,7 +74,7 @@ namespace Sigma.Roadie.AudioPlayer
                     MessageReceived(task1.Result);
                 }
             });
-
+            */
 
             /*
 

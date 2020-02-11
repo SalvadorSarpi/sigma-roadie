@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject Sigma.Roadie.Server.Orquestrator.OrchestratorClient orchestrator
 
 @code {
 
@@ -47,11 +48,13 @@
     async Task PlayNext()
     {
         CurrentScene = await SceneService.PlayNextScene(LoadedSetlist.SetlistId);
+        await orchestrator.SendPlaySceneCommand(CurrentScene?.SceneId ?? Guid.Empty);
     }
 
     async Task PlayScene(Guid sceneId)
     {
         CurrentScene = await SceneService.PlayScene(LoadedSetlist.SetlistId, sceneId);
+        await orchestrator.SendPlaySceneCommand(CurrentScene?.SceneId ?? Guid.Empty);
     }
 
 

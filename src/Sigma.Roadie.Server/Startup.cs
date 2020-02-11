@@ -46,6 +46,8 @@ namespace Sigma.Roadie.Server
             // context database
             services.AddDbContext<RoadieEntities>(options => options.UseSqlServer(Configuration["ConnectionStrings:RoadieEntities"]));
 
+            services.AddSingleton<OrchestratorClient>();
+
             // custom services
             services.AddTransient<SetlistService>();
             services.AddTransient<SceneService>();

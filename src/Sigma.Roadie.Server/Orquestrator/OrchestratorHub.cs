@@ -17,9 +17,9 @@ namespace Sigma.Roadie.Server.Orquestrator
         }
 
 
-        public void Send(string name, string message)
+        public void PlayScene(Guid sceneId)
         {
-            Clients.All.SendAsync("broadcastMessage", name, message);
+            Clients.All.SendAsync("PlayScene", sceneId);
         }
 
 
