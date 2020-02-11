@@ -31,6 +31,8 @@ namespace Sigma.Roadie.AudioPlayer
 
         List<Player> players = new List<Player>();
 
+        VideoPlayer VideoPlayer;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,6 +50,9 @@ namespace Sigma.Roadie.AudioPlayer
             hub.On("StopAudio", () => PlayScene(null));
 
             txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + Environment.NewLine + Environment.NewLine;
+
+            VideoPlayer = new VideoPlayer();
+            VideoPlayer.Show();
         }
 
 
@@ -90,7 +95,14 @@ namespace Sigma.Roadie.AudioPlayer
         {
             foreach (var file in model.MediaFiles)
             {
-                players.Add(new Player(file));
+                if (file.Type == 1)
+                {   // audio
+                    players.Add(new Player(file));
+                }
+                if (file.Type == 2)
+                {   // video
+                    VideoPlayer.PlayVideo(file);
+                }
             }
         }
 
@@ -100,6 +112,8 @@ namespace Sigma.Roadie.AudioPlayer
             {
                 player.Stop();
             }
+
+            VideoPlayer.StopVideo();
         }
 
 

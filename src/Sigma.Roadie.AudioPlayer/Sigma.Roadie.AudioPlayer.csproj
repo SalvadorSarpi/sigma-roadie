@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Sigma.Roadie.Domain\Sigma.Roadie.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="VideoPlayer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>
