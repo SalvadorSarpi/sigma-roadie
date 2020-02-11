@@ -153,6 +153,17 @@ namespace Sigma.Roadie.Services
         }
 
 
+        public async Task<MediaFile> GetMediaFileById(Guid mediaFileId)
+        {
+            var file = await (from p in entities.MediaFile
+                                .Include(q => q.Scene)
+                              where p.MediaFileId == mediaFileId
+                              select p).FirstOrDefaultAsync();
+
+            return file;
+        }
+
+
     }
 
 }

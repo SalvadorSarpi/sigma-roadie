@@ -55,6 +55,7 @@
     <div class="card">
         <div class="card-header">
             Archivos asociados
+            <a class="btn btn-primary btn-sm float-right" href="/mediafile/@SceneId/@Guid.Empty"><i class="oi oi-plus"></i></a>
         </div>
         <div class="card-body">
             <table class="table table-borderless">
@@ -72,7 +73,7 @@
                     {
                         <tr>
                             <td><Sigma.Roadie.Server.Pages.Scenes.Components.MediaFileTypeLabel MediaFile="file" /></td>
-                            <td>@file.Name</td>
+                            <td><a href="/mediafile/@SceneId/@file.MediaFileId">@file.Name</a></td>
                             <td>@file.LocalUri</td>
                             <td>@file.PlayAt</td>
                         </tr>

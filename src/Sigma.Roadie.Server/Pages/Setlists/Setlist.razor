@@ -114,8 +114,8 @@
                                     <button type="button" class="btn btn-secondary btn-sm" @onclick="@(() => UpdatePosition(scene.SceneId, 1))"><i class="oi oi-arrow-bottom"></i></button>
                                 }
                             </td>
-                            <td>@scene.Scene.Name</td>
-                            <td>@scene.Scene.Duration</td>
+                            <td>@scene.Scene?.Name</td>
+                            <td>@scene.Scene?.Duration</td>
                             <td><Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" /></td>
                         </tr>
                     }

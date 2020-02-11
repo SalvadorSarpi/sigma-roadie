@@ -1,0 +1,82 @@
+﻿@page "/mediafile/{SceneId:guid}/{MediaFileId:guid}"
+
+@code {
+
+    [Parameter]
+    public Guid MediaFileId { get; set; }
+
+    [Parameter]
+    public Guid SceneId { get; set; }
+
+    Domain.DataModels.MediaFile Model { get; set; }
+
+    bool IsDeleteModalVisible { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = await SceneService.GetMediaFileById(MediaFileId);
+
+        if (Model == null)
+        {
+            Model = new Domain.DataModels.MediaFile();
+        }
+    }
+
+
+    async Task TrySave()
+    {
+        this.Model = await SceneService.UpdateMediaFileToScene(SceneId, Model);
+        MediaFileId = Model.MediaFileId;
+
+        NavigationManager.NavigateTo($"/scene/{SceneId}");
+    }
+
+    async Task Delete()
+    {
+        await SceneService.RemoveMediaFileFromScene(SceneId, Model.MediaFileId);
+        NavigationManager.NavigateTo($"/scene/{SceneId}");
+    }
+
+}
+
+
+@if (Model != null)
+{
+
+    <h1>Archivo: @Model.Name</h1>
+    <br />
+
+    <div class="card">
+        <div class="card-header">
+            Detalles
+        </div>
+        <div class="card-body">
+            <FormItem Label="Nombre:">
+                <input type="text" class="form-control" @bind="@Model.Name">
+            </FormItem>
+            <FormItem Label="Tipo:">
+                <select class="form-control" @bind="Model.Type">
+                    <option value="1">Audio</option>
+                    <option value="2">Video</option>
+                </select>
+            </FormItem>
+            <FormItem Label="Uri relativa:">
+                <input type="text" class="form-control" @bind="@Model.LocalUri">
+            </FormItem>
+            <FormItem Label="Desfase:">
+                <input type="text" class="form-control" @bind="@Model.PlayAt">
+            </FormItem>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-primary" @onclick="@TrySave">Guardar</button>
+            <button type="button" class="btn btn-warning" @onclick="@(() => IsDeleteModalVisible = true)">Eliminar</button>
+        </div>
+    </div>
+
+
+}
+
+
+<ModalComponent Visible="@IsDeleteModalVisible" DeleteAction="Delete" CancelAction="() => IsDeleteModalVisible = false" ShowCancelButton="true" ShowDeleteButton="true">
+    ¿Eliminar el setlist?
+</ModalComponent>
