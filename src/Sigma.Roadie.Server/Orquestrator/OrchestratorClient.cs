@@ -46,7 +46,7 @@ namespace Sigma.Roadie.Server.Orquestrator
                                   select new MediaFileModel()
                                   {
                                       MediaFileId = p.MediaFileId,
-                                      LocalUri = p.Url1
+                                      LocalUri = p.LocalUri
                                   }).ToList()
                 };
             }

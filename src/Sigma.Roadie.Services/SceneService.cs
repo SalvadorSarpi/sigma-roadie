@@ -103,8 +103,7 @@ namespace Sigma.Roadie.Services
             dest.Name = update.Name;
             dest.PlayAt = update.PlayAt;
             dest.Type = update.Type;
-            dest.Url1 = update.Url1;
-            dest.Url2 = update.Url2;
+            dest.LocalUri = update.LocalUri;
 
             await entities.SaveChangesAsync();
 
