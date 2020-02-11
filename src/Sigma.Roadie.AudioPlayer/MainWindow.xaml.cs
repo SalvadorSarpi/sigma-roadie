@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
 using Sigma.Roadie.Domain.Models;
 
@@ -43,15 +44,17 @@ namespace Sigma.Roadie.AudioPlayer
 
             hub.StartAsync();
 
-            hub.On<SceneModel>("PlayScene", PlayScene);
+            hub.On<string>("PlayScene", PlayScene);
             hub.On("StopAudio", () => PlayScene(null));
 
-            txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + Environment.NewLine + Environment.NewLine;
         }
 
 
-        void PlayScene(SceneModel model)
+        void PlayScene(string json)
         {
+            SceneModel model = JsonConvert.DeserializeObject<SceneModel>(json);
+
             if (model != null)
             {
                 LogMessage("Comenzar: " + model.Name);
@@ -63,6 +66,10 @@ namespace Sigma.Roadie.AudioPlayer
             else
             {
                 LogMessage("Detener");
+                this.Dispatcher.Invoke(() =>
+                {
+                    StopAll();
+                });
             }
         }
 
@@ -81,6 +88,14 @@ namespace Sigma.Roadie.AudioPlayer
             foreach (var file in model.MediaFiles)
             {
                 players.Add(new Player(file));
+            }
+        }
+
+        void StopAll()
+        {
+            foreach(var player in players)
+            {
+                player.Stop();
             }
         }
 

@@ -26,7 +26,7 @@ namespace Sigma.Roadie.Domain.Models
 
         public Guid MediaFileId { get; set; }
 
-        public MediaFileType Type { get; set; }
+        public short Type { get; set; }
 
         public string LocalUri { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
 using Sigma.Roadie.Domain.Models;
 using System;
@@ -46,12 +47,15 @@ namespace Sigma.Roadie.Server.Orquestrator
                                   select new MediaFileModel()
                                   {
                                       MediaFileId = p.MediaFileId,
-                                      LocalUri = p.LocalUri
+                                      LocalUri = p.LocalUri,
+                                      PlayAt = p.PlayAt,
+                                      Type = p.Type
                                   }).ToList()
                 };
             }
 
-            await hub.InvokeAsync<bool>("PlayScene", model).ContinueWith(task1 =>
+            var json = JsonConvert.SerializeObject(model);
+            await hub.InvokeAsync<string>("PlayScene", json).ContinueWith(task1 =>
             {
                 if (task1.IsFaulted)
                 {
@@ -63,7 +67,7 @@ namespace Sigma.Roadie.Server.Orquestrator
 
         public async Task StopVideo()
         {
-            await hub.InvokeAsync<bool>("StopVideo").ContinueWith(task1 =>
+            await hub.InvokeAsync("StopVideo").ContinueWith(task1 =>
             {
                 if (task1.IsFaulted)
                 {
@@ -75,7 +79,7 @@ namespace Sigma.Roadie.Server.Orquestrator
 
         public async Task StopAudio()
         {
-            await hub.InvokeAsync<bool>("StopAudio").ContinueWith(task1 =>
+            await hub.InvokeAsync("StopAudio").ContinueWith(task1 =>
             {
                 if (task1.IsFaulted)
                 {

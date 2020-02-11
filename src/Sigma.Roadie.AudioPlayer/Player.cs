@@ -2,6 +2,8 @@
 using Sigma.Roadie.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -22,13 +24,18 @@ namespace Sigma.Roadie.AudioPlayer
         {
             this.model = model;
 
+            string fileUri = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "mediafiles", model.LocalUri);
+
+            if (!File.Exists(fileUri)) return;
+
+
             outputDevice = new WaveOutEvent();
             outputDevice.PlaybackStopped += (e, r) =>
             {
                 
             };
 
-            audioFile = new AudioFileReader(model.LocalUri);
+            audioFile = new AudioFileReader(fileUri);
             outputDevice.Init(audioFile);
 
             if (model.PlayAt.Ticks == 0)
@@ -40,7 +47,7 @@ namespace Sigma.Roadie.AudioPlayer
                 timer = new Timer(e =>
                 {
                     outputDevice.Play();
-                }, null, model.PlayAt.Milliseconds, Timeout.Infinite);
+                }, null, Convert.ToInt32(model.PlayAt.TotalMilliseconds), Timeout.Infinite);
             }
         }
 

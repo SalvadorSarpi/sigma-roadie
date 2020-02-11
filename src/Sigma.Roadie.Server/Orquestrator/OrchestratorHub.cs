@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
 using Sigma.Roadie.Domain.Models;
 using System;
@@ -19,26 +20,21 @@ namespace Sigma.Roadie.Server.Orquestrator
         }
 
 
-        public bool PlayScene(SceneModel scene)
+        public void PlayScene(string json)
         {
-            Clients.All.SendAsync("PlayScene", scene);
-
-            return true;
+            //var json = JsonConvert.SerializeObject(scene);
+            Clients.All.SendAsync("PlayScene", json);
         }
 
 
-        public bool StopVideo()
+        public void StopVideo()
         {
             Clients.All.SendAsync("StopVideo");
-
-            return true;
         }
 
-        public bool StopAudio()
+        public void StopAudio()
         {
             Clients.All.SendAsync("StopAudio");
-
-            return true;
         }
 
 
