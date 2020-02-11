@@ -15,9 +15,7 @@ namespace Sigma.Roadie.Domain.DataModels
         [StringLength(100)]
         public string Name { get; set; }
         [Required]
-        public string Url1 { get; set; }
-        [Required]
-        public string Url2 { get; set; }
+        public string LocalUri { get; set; }
         public TimeSpan PlayAt { get; set; }
 
         [ForeignKey(nameof(SceneId))]
