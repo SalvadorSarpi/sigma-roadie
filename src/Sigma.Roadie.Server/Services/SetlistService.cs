@@ -81,8 +81,6 @@ namespace Sigma.Roadie.Services
         {
             var allsets = await entities.Setlist.ToListAsync();
             allsets.ForEach(q => q.IsActive = false);
-            var allscenes = await entities.SetlistScene.ToListAsync();
-            allscenes.ForEach(q => q.IsActive = false);
 
             var dest = await (from p in entities.Setlist where p.SetlistId == setlistId select p).FirstOrDefaultAsync();
 
@@ -121,8 +119,7 @@ namespace Sigma.Roadie.Services
             {
                 SceneId = sceneId,
                 SetlistId = setlistId,
-                Index = Convert.ToInt16(index),
-                IsActive = false
+                Index = Convert.ToInt16(index)
             };
 
             entities.SetlistScene.Add(rel);

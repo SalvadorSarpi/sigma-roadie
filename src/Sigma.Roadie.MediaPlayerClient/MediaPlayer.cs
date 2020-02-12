@@ -10,16 +10,16 @@ namespace Sigma.Roadie.AudioPlayer
     public class MediaPlayer
     {
 
-        MainWindow mainWindow;
         VideoPlayer video;
 
         List<AudioPlayer> audios;
 
-        public MediaPlayer(VideoPlayer video, MainWindow mainWindow)
+        public MediaPlayer(VideoPlayer video)
         {
-            this.mainWindow = mainWindow;
             this.video = video;
             audios = new List<AudioPlayer>();
+
+            video.Show();
         }
 
 

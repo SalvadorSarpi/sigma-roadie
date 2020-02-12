@@ -8,7 +8,6 @@
     List<Domain.DataModels.Setlist> AvailableSetlists { get; set; }
 
     Domain.DataModels.Setlist LoadedSetlist { get; set; }
-    Domain.DataModels.SetlistScene CurrentScene { get; set; }
 
     bool Loaded = false;
 
@@ -23,7 +22,6 @@
         {
             selectedSetlistId = active.SetlistId;
             LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
-            CurrentScene = await SceneService.GetActiveScene();
         }
 
         Loaded = true;
@@ -37,28 +35,43 @@
         if (selectedSetlistId == Guid.Empty)
         {
             LoadedSetlist = null;
-            CurrentScene = null;
         }
         else
         {
             LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
-            CurrentScene = await SceneService.GetActiveScene();
         }
     }
 
 
-    async Task PlayNext()
+    async Task PlayScene(Scene scene)
     {
-        CurrentScene = await SceneService.PlayNextScene(LoadedSetlist.SetlistId);
-        //await orchestrator.SendPlaySceneCommand(CurrentScene?.Scene);
-
-        var gg = orchestrator;
+        foreach (var media in scene.MediaFile)
+        {
+            if (media.PlayAt.HasValue == false || media.PlayAt?.Ticks == 0)
+            {
+                await PlayMedia(media);
+            }
+        }
     }
 
-    async Task PlayScene(Guid sceneId)
+    async Task PlayMedia(MediaFile media)
     {
-        CurrentScene = await SceneService.PlayScene(LoadedSetlist.SetlistId, sceneId);
-        //await orchestrator.SendPlaySceneCommand(CurrentScene?.Scene);
+        var clean = new MediaFile()
+        {
+            PlayAt = media.PlayAt,
+            LocalUri = media.LocalUri,
+            MediaFileId = media.MediaFileId,
+            Name = media.Name,
+            SceneId = media.SceneId,
+            Type = media.Type
+        };
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(clean);
+        await orchestrator.Clients.All.PlayMedia(json);
+    }
+
+    async Task StopMedia(Guid mediaFileId)
+    {
+        await orchestrator.Clients.All.StopMedia(mediaFileId);
     }
 
     async Task StopAll()
@@ -111,16 +124,6 @@
                         <FormItem Label="Setlist:">
                             @LoadedSetlist.Name
                         </FormItem>
-
-                        @if (CurrentScene != null)
-                        {
-                            <FormItem Label="Escena:">
-                                <strong>@CurrentScene.Scene.Name</strong>
-                            </FormItem>
-                            <FormItem Label="Duración:">
-                                @CurrentScene.Scene.Duration
-                            </FormItem>
-                        }
                     </div>
                     <div class="card-footer">
                         <button type="button" class="btn btn-danger" @onclick="StopAll"><i class="oi oi-media-stop"></i> Detener todo</button>
@@ -133,45 +136,32 @@
     <br />
 
 
+
     @if (LoadedSetlist != null)
     {
 
-        <div class="card">
-            <div class="card-header">
-                Setlist: @LoadedSetlist.Name
+        @foreach (var scene in LoadedSetlist.SetlistScene)
+        {
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        @scene.Index / @scene.Scene.Name
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <FormItem Label="Duración:">
+                                    @scene.Scene.Name
+                                </FormItem>
+                                <Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" />
+                            </div>
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-success btn-sm" @onclick="() => PlayScene(scene.Scene)"><i class="oi oi-play-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Posición</th>
-                            <th>Nombre</th>
-                            <th>Duración</th>
-                            <th>Contiene</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var scene in LoadedSetlist.SetlistScene)
-                        {
-                            <tr>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-sm" @onclick="() => PlayScene(scene.SceneId)"><i class="oi oi-play-circle"></i></button>
-                                </td>
-                                <td>@scene.Index</td>
-                                <td>@scene.Scene.Name</td>
-                                <td>@scene.Scene.Duration</td>
-                                <td><Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" /></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer">
-
-            </div>
-        </div>
+        }
     }
-
 }

@@ -10,7 +10,7 @@ namespace Sigma.Roadie.Domain
     public interface IOrchestratorHub
     {
 
-        Task PlayMedia(MediaFile media);
+        Task PlayMedia(string json);
 
         Task StopMedia(Guid mediaFileId);
 

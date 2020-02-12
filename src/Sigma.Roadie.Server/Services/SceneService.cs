@@ -38,18 +38,6 @@ namespace Sigma.Roadie.Services
         }
 
 
-        public async Task<SetlistScene> GetActiveScene()
-        {
-            var active = await (from p in entities.SetlistScene
-                                    .Include(q => q.Scene)
-                                    .ThenInclude(q => q.MediaFile)
-                                where p.IsActive == true
-                                select p).AsNoTracking().FirstOrDefaultAsync();
-
-            return active;
-        }
-
-
         public async Task<Scene> UpdateScene(Scene update)
         {
             var dest = await (from p in entities.Scene where p.SceneId == update.SceneId select p).FirstOrDefaultAsync();
@@ -118,38 +106,6 @@ namespace Sigma.Roadie.Services
             entities.Remove(rel);
 
             await entities.SaveChangesAsync();
-        }
-
-
-        public async Task<SetlistScene> PlayNextScene(Guid setlistId)
-        {
-            var active = await GetActiveScene();
-
-            int nextIndex = (active?.Index ?? 0) + 1;
-
-            var next = await (from p in entities.SetlistScene
-                              where p.SetlistId == setlistId && p.Index == nextIndex
-                              select p).AsNoTracking().FirstOrDefaultAsync();
-
-            return await PlayScene(setlistId, next?.SceneId ?? Guid.Empty);
-        }
-
-
-        public async Task<SetlistScene> PlayScene(Guid setlistId, Guid sceneId)
-        {
-            var allscenes = await entities.SetlistScene.ToListAsync();
-            allscenes.ForEach(q => q.IsActive = false);
-
-            var next = await (from p in entities.SetlistScene where p.SetlistId == setlistId && p.SceneId == sceneId select p).FirstOrDefaultAsync();
-
-            if (next != null)
-            {
-                next.IsActive = true;
-            }
-
-            await entities.SaveChangesAsync();
-
-            return await GetActiveScene();
         }
 
 
