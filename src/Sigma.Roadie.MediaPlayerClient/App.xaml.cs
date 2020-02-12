@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Sigma.Roadie.AudioPlayer
+namespace Sigma.Roadie.MediaPlayerClient
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -23,15 +23,19 @@ namespace Sigma.Roadie.AudioPlayer
 
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+
+            _ = ServiceProvider.GetRequiredService<HubClient>();
+
+            var mainWindow = (MainWindow)ServiceProvider.GetRequiredService<ILocalLogger>();
             mainWindow.Show();
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(MainWindow));
+            services.AddSingleton<ILocalLogger, MainWindow>();
             services.AddSingleton(typeof(VideoPlayer));
             services.AddSingleton(typeof(MediaPlayer));
+            services.AddSingleton(typeof(HubClient));
         }
     }
 }

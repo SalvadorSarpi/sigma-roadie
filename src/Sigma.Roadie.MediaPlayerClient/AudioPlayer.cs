@@ -7,11 +7,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-namespace Sigma.Roadie.AudioPlayer
+namespace Sigma.Roadie.MediaPlayerClient
 {
 
     public class AudioPlayer
     {
+
+        ILocalLogger log;
 
         public MediaFile CurrentMediaFile { get; set; }
 
@@ -22,7 +24,7 @@ namespace Sigma.Roadie.AudioPlayer
         AudioFileReader audioFile;
 
 
-        public AudioPlayer()
+        public AudioPlayer(ILocalLogger log)
         {
             outputDevice = new WaveOutEvent();
             outputDevice.PlaybackStopped += (e, r) =>
@@ -78,6 +80,7 @@ namespace Sigma.Roadie.AudioPlayer
         {
             if (mediaFileId == CurrentMediaFile?.MediaFileId)
             {
+                log.LogMessage($"Deteniendo {CurrentMediaFile.Name}");
                 StopAudio();
             }
         }

@@ -5,18 +5,20 @@ using System.Text;
 using System.Linq;
 using Sigma.Roadie.Domain.DataModels.Enums;
 
-namespace Sigma.Roadie.AudioPlayer
+namespace Sigma.Roadie.MediaPlayerClient
 {
     public class MediaPlayer
     {
 
         VideoPlayer video;
+        ILocalLogger log;
 
         List<AudioPlayer> audios;
 
-        public MediaPlayer(VideoPlayer video)
+        public MediaPlayer(VideoPlayer video, ILocalLogger log)
         {
             this.video = video;
+            this.log = log;
             audios = new List<AudioPlayer>();
 
             video.Show();
@@ -25,6 +27,8 @@ namespace Sigma.Roadie.AudioPlayer
 
         public void PlayMedia(MediaFile media)
         {
+            log.LogMessage($"Reproducir: {media.Name}");
+
             if (media.TypeEnum == MediaFileType.Audio)
             {
                 var player = GetAvailableAudioPlayer();
@@ -44,6 +48,8 @@ namespace Sigma.Roadie.AudioPlayer
 
         public void StopAll()
         {
+            log.LogMessage($"Detener todo.");
+
             audios.ForEach(q => q.StopAudio());
             video.StopVideo();
         }
@@ -55,8 +61,10 @@ namespace Sigma.Roadie.AudioPlayer
 
             if (available == null)
             {
-                available = new AudioPlayer();
+                available = new AudioPlayer(log);
                 audios.Add(available);
+
+                log.LogMessage($"Creando audio player.");
             }
 
             return available;

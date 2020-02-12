@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
 
-namespace Sigma.Roadie.AudioPlayer
+namespace Sigma.Roadie.MediaPlayerClient
 {
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
@@ -26,14 +26,18 @@ namespace Sigma.Roadie.AudioPlayer
     public partial class VideoPlayer : Window
     {
 
+        ILocalLogger log;
+
         public MediaFile CurrentMediaFile { get; set; }
 
         public bool IsBusy { get; set; }
 
 
-        public VideoPlayer()
+        public VideoPlayer(ILocalLogger log)
         {
             InitializeComponent();
+
+            this.log = log;
         }
 
 
@@ -61,6 +65,7 @@ namespace Sigma.Roadie.AudioPlayer
             Dispatcher.Invoke(() =>
             {
                 video.Source = null;
+                CurrentMediaFile = null;
             });
         }
 
@@ -69,6 +74,7 @@ namespace Sigma.Roadie.AudioPlayer
         {
             if (mediaFileId == CurrentMediaFile.MediaFileId)
             {
+                log.LogMessage($"Deteniendo {CurrentMediaFile.Name}");
                 StopVideo();
             }
         }
