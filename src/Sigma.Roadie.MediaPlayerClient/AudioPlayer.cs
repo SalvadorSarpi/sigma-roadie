@@ -13,49 +13,73 @@ namespace Sigma.Roadie.AudioPlayer
     public class AudioPlayer
     {
 
+        public MediaFile CurrentMediaFile { get; set; }
+
+        public bool IsBusy { get; set; } = false;
+
+
         WaveOutEvent outputDevice;
         AudioFileReader audioFile;
 
-        MediaFile model;
 
-        Timer timer;
-
-        public Player(MediaFile model)
+        public AudioPlayer()
         {
-            this.model = model;
+            outputDevice = new WaveOutEvent();
+            outputDevice.PlaybackStopped += (e, r) =>
+            {
+                IsBusy = false;
+                CurrentMediaFile = null;
+            };
+        }
 
+
+        public void PlayAudio(MediaFile model)
+        {
             string fileUri = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "mediafiles", model.LocalUri);
 
             if (!File.Exists(fileUri)) return;
 
-
-            outputDevice = new WaveOutEvent();
-            outputDevice.PlaybackStopped += (e, r) =>
-            {
-                
-            };
+            this.CurrentMediaFile = model;
+            IsBusy = true;
 
             audioFile = new AudioFileReader(fileUri);
             outputDevice.Init(audioFile);
 
-            if (model.PlayAt?.Ticks == 0)
+            if (model.PlayAt.HasValue == false || model.PlayAt?.Ticks == 0)
             {
-                outputDevice.Play();
+                PlayNow();
             }
             else if (model.PlayAt?.Ticks > 0)
             {
-                timer = new Timer(e =>
+                var timer = new Timer(e =>
                 {
-                    outputDevice.Play();
+                    PlayNow();
                 }, null, Convert.ToInt32(model.PlayAt?.TotalMilliseconds), Timeout.Infinite);
             }
         }
 
 
-        public void Stop()
+        void PlayNow()
         {
-            timer = null;
+            if (IsBusy == true)
+            {
+                outputDevice.Play();
+            }
+        }
+
+
+        public void StopAudio()
+        {
             outputDevice.Stop();
+        }
+
+
+        public void StopMedia(Guid mediaFileId)
+        {
+            if (mediaFileId == CurrentMediaFile?.MediaFileId)
+            {
+                StopAudio();
+            }
         }
 
     }

@@ -26,6 +26,11 @@ namespace Sigma.Roadie.AudioPlayer
     public partial class VideoPlayer : Window
     {
 
+        public MediaFile CurrentMediaFile { get; set; }
+
+        public bool IsBusy { get; set; }
+
+
         public VideoPlayer()
         {
             InitializeComponent();
@@ -39,10 +44,14 @@ namespace Sigma.Roadie.AudioPlayer
 
             if (!File.Exists(fileUri)) return;
 
+            StopVideo();
+
+            CurrentMediaFile = model;
 
             Dispatcher.Invoke(() =>
             {
                 video.Source = new Uri(fileUri);
+                video.Volume = 0;
             });
         }
 
@@ -53,6 +62,15 @@ namespace Sigma.Roadie.AudioPlayer
             {
                 video.Source = null;
             });
+        }
+
+
+        public void StopMedia(Guid mediaFileId)
+        {
+            if (mediaFileId == CurrentMediaFile.MediaFileId)
+            {
+                StopVideo();
+            }
         }
 
 

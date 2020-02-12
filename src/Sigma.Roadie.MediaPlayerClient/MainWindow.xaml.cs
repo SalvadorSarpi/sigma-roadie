@@ -28,12 +28,13 @@ namespace Sigma.Roadie.AudioPlayer
     {
 
         HubConnection hub;
+        MediaPlayer mediaPlayer;
 
-        List<Player> players = new List<Player>();
-
-        public MainWindow(VideoPlayer VideoPlayer)
+        public MainWindow(MediaPlayer mediaPlayer)
         {
             InitializeComponent();
+
+            this.mediaPlayer = mediaPlayer;
 
             hub = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5000/orchestratorhub")
@@ -45,13 +46,10 @@ namespace Sigma.Roadie.AudioPlayer
             hub.StartAsync();
 
             hub.On<string>("PlayMedia", PlayMedia);
-            hub.On<Guid>("StopMedia", StopMedia);
-            hub.On("StopAll", StopAll);
+            hub.On<Guid>("StopMedia", mediaPlayer.StopMedia);
+            hub.On("StopAll", mediaPlayer.StopAll);
 
             txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + Environment.NewLine + Environment.NewLine;
-
-            VideoPlayer = new VideoPlayer();
-            VideoPlayer.Show();
         }
 
 
@@ -59,50 +57,27 @@ namespace Sigma.Roadie.AudioPlayer
         {
             if (string.IsNullOrWhiteSpace(json)) return;
 
-            MediaFile media = JsonConvert.DeserializeObject<MediaFile>(json);
+            try
+            {
+                MediaFile media = JsonConvert.DeserializeObject<MediaFile>(json);
 
-            if (media != null)
-            {
-                LogMessage("Comenzar: " + media.Name);
-                this.Dispatcher.Invoke(() =>
-                {
-                    if (media.TypeEnum == MediaFileType.Audio)
-                    {
-                        //PlayAudio(model);
-                    }
-                });
+                mediaPlayer.PlayMedia(media);
             }
-            else
+            catch (Exception e)
             {
-                LogMessage("Detener");
+                LogMessage("ERROR: " + e.Message);
             }
         }
 
-        void StopMedia(Guid mediaFileId)
-        {
 
-        }
-
-
-        void LogMessage(string message)
+        public void LogMessage(string message)
         {
             this.Dispatcher.Invoke(() =>
             {
                 txt.Text += message + Environment.NewLine;
             });
         }
-
-
-        void StopAll()
-        {
-            foreach(var player in players)
-            {
-                player.Stop();
-            }
-
-            //VideoPlayer.StopVideo();
-        }
-
+        
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
