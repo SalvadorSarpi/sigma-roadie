@@ -29,8 +29,9 @@ namespace Sigma.Roadie.AudioPlayer
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient(typeof(MainWindow));
+            services.AddSingleton(typeof(MainWindow));
             services.AddSingleton(typeof(VideoPlayer));
+            services.AddSingleton(typeof(MediaPlayer));
         }
     }
 }

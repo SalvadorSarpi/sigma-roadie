@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ScaffoldDomain.ps1 = ScaffoldDomain.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigma.Roadie.AudioPlayer", "Sigma.Roadie.AudioPlayer\Sigma.Roadie.AudioPlayer.csproj", "{82EE0E16-7876-4363-B12E-400600398EDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigma.Roadie.MediaPlayerClient", "Sigma.Roadie.MediaPlayerClient\Sigma.Roadie.MediaPlayerClient.csproj", "{82EE0E16-7876-4363-B12E-400600398EDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,7 @@ using System.Threading;
 namespace Sigma.Roadie.AudioPlayer
 {
 
-    public class Player
+    public class AudioPlayer
     {
 
         WaveOutEvent outputDevice;
