@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
-using Sigma.Roadie.Domain.Models;
+using Sigma.Roadie.Domain.DataModels.Enums;
 
 namespace Sigma.Roadie.AudioPlayer
 {
@@ -31,9 +31,7 @@ namespace Sigma.Roadie.AudioPlayer
 
         List<Player> players = new List<Player>();
 
-        VideoPlayer VideoPlayer;
-
-        public MainWindow()
+        public MainWindow(VideoPlayer VideoPlayer)
         {
             InitializeComponent();
 
@@ -46,8 +44,9 @@ namespace Sigma.Roadie.AudioPlayer
 
             hub.StartAsync();
 
-            hub.On<string>("PlayScene", PlayScene);
-            hub.On("StopAudio", () => PlayScene(null));
+            hub.On<string>("PlayMedia", PlayMedia);
+            hub.On<Guid>("StopMedia", StopMedia);
+            hub.On("StopAll", StopAll);
 
             txt.Text = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + Environment.NewLine + Environment.NewLine;
 
@@ -56,29 +55,32 @@ namespace Sigma.Roadie.AudioPlayer
         }
 
 
-        void PlayScene(string json)
+        void PlayMedia(string json)
         {
-            SceneModel model = JsonConvert.DeserializeObject<SceneModel>(json);
+            if (string.IsNullOrWhiteSpace(json)) return;
 
+            MediaFile media = JsonConvert.DeserializeObject<MediaFile>(json);
 
-            this.Dispatcher.Invoke(() =>
+            if (media != null)
             {
-                StopAll();
-            });
-
-
-            if (model != null)
-            {
-                LogMessage("Comenzar: " + model.Name);
+                LogMessage("Comenzar: " + media.Name);
                 this.Dispatcher.Invoke(() =>
                 {
-                    PlayAudio(model);
+                    if (media.TypeEnum == MediaFileType.Audio)
+                    {
+                        //PlayAudio(model);
+                    }
                 });
             }
             else
             {
                 LogMessage("Detener");
             }
+        }
+
+        void StopMedia(Guid mediaFileId)
+        {
+
         }
 
 
@@ -91,21 +93,6 @@ namespace Sigma.Roadie.AudioPlayer
         }
 
 
-        private void PlayAudio(SceneModel model)
-        {
-            foreach (var file in model.MediaFiles)
-            {
-                if (file.Type == 1)
-                {   // audio
-                    players.Add(new Player(file));
-                }
-                if (file.Type == 2)
-                {   // video
-                    VideoPlayer.PlayVideo(file);
-                }
-            }
-        }
-
         void StopAll()
         {
             foreach(var player in players)
@@ -113,7 +100,7 @@ namespace Sigma.Roadie.AudioPlayer
                 player.Stop();
             }
 
-            VideoPlayer.StopVideo();
+            //VideoPlayer.StopVideo();
         }
 
 

@@ -1,4 +1,5 @@
-﻿using Sigma.Roadie.Domain.DataModels.Enums;
+﻿using Newtonsoft.Json;
+using Sigma.Roadie.Domain.DataModels.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,6 +10,7 @@ namespace Sigma.Roadie.Domain.DataModels
     public partial class MediaFile
     {
 
+        [JsonIgnore]
         [NotMapped]
         public MediaFileType TypeEnum
         {

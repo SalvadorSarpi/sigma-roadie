@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sigma.Roadie.Domain\Sigma.Roadie.Domain.csproj" />
-    <ProjectReference Include="..\Sigma.Roadie.Services\Sigma.Roadie.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,7 +17,6 @@ using System.Windows.Navigation;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
-using Sigma.Roadie.Domain.Models;
 
 namespace Sigma.Roadie.AudioPlayer
 {
@@ -34,7 +33,7 @@ namespace Sigma.Roadie.AudioPlayer
 
 
 
-        public void PlayVideo(MediaFileModel model)
+        public void PlayVideo(MediaFile model)
         {
             string fileUri = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "mediafiles", model.LocalUri);
 

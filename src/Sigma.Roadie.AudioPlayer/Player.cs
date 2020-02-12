@@ -1,5 +1,5 @@
 ﻿using NAudio.Wave;
-using Sigma.Roadie.Domain.Models;
+using Sigma.Roadie.Domain.DataModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,11 +16,11 @@ namespace Sigma.Roadie.AudioPlayer
         WaveOutEvent outputDevice;
         AudioFileReader audioFile;
 
-        MediaFileModel model;
+        MediaFile model;
 
         Timer timer;
 
-        public Player(MediaFileModel model)
+        public Player(MediaFile model)
         {
             this.model = model;
 
@@ -38,16 +38,16 @@ namespace Sigma.Roadie.AudioPlayer
             audioFile = new AudioFileReader(fileUri);
             outputDevice.Init(audioFile);
 
-            if (model.PlayAt.Ticks == 0)
+            if (model.PlayAt?.Ticks == 0)
             {
                 outputDevice.Play();
             }
-            else
+            else if (model.PlayAt?.Ticks > 0)
             {
                 timer = new Timer(e =>
                 {
                     outputDevice.Play();
-                }, null, Convert.ToInt32(model.PlayAt.TotalMilliseconds), Timeout.Infinite);
+                }, null, Convert.ToInt32(model.PlayAt?.TotalMilliseconds), Timeout.Infinite);
             }
         }
 

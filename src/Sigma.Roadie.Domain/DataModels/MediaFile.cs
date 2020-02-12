@@ -16,7 +16,7 @@ namespace Sigma.Roadie.Domain.DataModels
         public string Name { get; set; }
         [Required]
         public string LocalUri { get; set; }
-        public TimeSpan PlayAt { get; set; }
+        public TimeSpan? PlayAt { get; set; }
 
         [ForeignKey(nameof(SceneId))]
         [InverseProperty("MediaFile")]
