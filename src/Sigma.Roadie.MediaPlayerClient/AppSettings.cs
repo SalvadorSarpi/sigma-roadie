@@ -12,6 +12,8 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public bool VideoPlayer { get; set; }
 
+        public bool Fullscreen { get; set; }
+
         public string HubEndpoint { get; set; }
 
     }

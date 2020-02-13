@@ -39,7 +39,7 @@ namespace Sigma.Roadie.MediaPlayerClient
         bool IsFullScreen { get; set; } = false;
 
 
-        public VideoPlayer(ILocalLogger log)
+        public VideoPlayer(ILocalLogger log, AppSettings settings)
         {
             InitializeComponent();
 
@@ -51,6 +51,9 @@ namespace Sigma.Roadie.MediaPlayerClient
               };
 
             LoadDefaultVideo();
+
+            IsFullScreen = settings.Fullscreen;
+            SetWindowState();
         }
 
 
@@ -105,13 +108,6 @@ namespace Sigma.Roadie.MediaPlayerClient
                     PlayNow();
                     dt.Stop();
                 }, this.Dispatcher);
-
-                /*
-                var timer = new Timer(e =>
-                {
-                    PlayNow();
-                }, null, Convert.ToInt32(model.PlayAt.TotalMilliseconds), Timeout.Infinite);
-                */
             }
         }
 
@@ -166,16 +162,21 @@ namespace Sigma.Roadie.MediaPlayerClient
             {
                 IsFullScreen = !IsFullScreen;
 
-                if (IsFullScreen)
-                {
-                    this.WindowStyle = WindowStyle.None;
-                    this.WindowState = WindowState.Maximized;
-                }
-                else
-                {
-                    this.WindowStyle = WindowStyle.SingleBorderWindow;
-                    this.WindowState = WindowState.Normal;
-                }
+                SetWindowState();
+            }
+        }
+
+        void SetWindowState()
+        {
+            if (IsFullScreen)
+            {
+                this.WindowStyle = WindowStyle.None;
+                this.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
+                this.WindowState = WindowState.Normal;
             }
         }
     }

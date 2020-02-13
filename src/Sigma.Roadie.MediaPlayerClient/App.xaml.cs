@@ -32,6 +32,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             {
                 AudioPlayer = configuration.GetValue<bool>("AudioPlayer"),
                 VideoPlayer = configuration.GetValue<bool>("VideoPlayer"),
+                Fullscreen = configuration.GetValue<bool>("Fullscreen"),
                 HubEndpoint = configuration.GetValue<string>("HubEndpoint")
             });
             ConfigureServices(serviceCollection);
@@ -42,6 +43,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             _ = ServiceProvider.GetRequiredService<HubClient>();
 
             var mainWindow = (MainWindow)ServiceProvider.GetRequiredService<ILocalLogger>();
+            mainWindow.WindowState = WindowState.Minimized;
             mainWindow.Show();
         }
 
