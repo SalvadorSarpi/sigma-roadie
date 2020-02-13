@@ -13,16 +13,21 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         VideoPlayer video;
         ILocalLogger log;
+        AppSettings settings;
 
         List<AudioPlayer> audios;
 
-        public MediaPlayer(VideoPlayer video, ILocalLogger log)
+        public MediaPlayer(VideoPlayer video, ILocalLogger log, AppSettings settings)
         {
             this.video = video;
             this.log = log;
+            this.settings = settings;
             audios = new List<AudioPlayer>();
 
-            video.Show();
+            if (settings.VideoPlayer)
+            {
+                video.Show();
+            }
         }
 
 
@@ -30,12 +35,12 @@ namespace Sigma.Roadie.MediaPlayerClient
         {
             log.LogMessage($"Reproducir: {media.Name}");
 
-            if (media.TypeEnum == MediaFileType.Audio)
+            if (media.TypeEnum == MediaFileType.Audio && settings.AudioPlayer)
             {
                 var player = GetAvailableAudioPlayer();
                 player.PlayAudio(media);
             }
-            else if (media.TypeEnum == MediaFileType.Video)
+            else if (media.TypeEnum == MediaFileType.Video && settings.VideoPlayer)
             {
                 video.PlayVideo(media);
             }

@@ -17,16 +17,18 @@ namespace Sigma.Roadie.MediaPlayerClient
         HubConnection hub;
         MediaPlayer mediaPlayer;
         ILocalLogger log;
+        AppSettings settings;
 
         Timer statusTimer;
 
-        public HubClient(MediaPlayer mediaPlayer, ILocalLogger log)
+        public HubClient(MediaPlayer mediaPlayer, ILocalLogger log, AppSettings settings)
         {
             this.mediaPlayer = mediaPlayer;
             this.log = log;
+            this.settings = settings;
 
             hub = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/orchestratorhub")
+                .WithUrl($"http://{settings.HubEndpoint}/orchestratorhub")
                 .WithAutomaticReconnect()
                 .Build();
 

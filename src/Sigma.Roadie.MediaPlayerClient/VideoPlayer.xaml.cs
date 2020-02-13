@@ -32,6 +32,8 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public bool IsBusy { get; set; }
 
+        bool IsFullScreen { get; set; } = false;
+
 
         public VideoPlayer(ILocalLogger log)
         {
@@ -79,13 +81,30 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public void StopMedia(Guid mediaFileId)
         {
-            if (mediaFileId == CurrentMediaFile.MediaFileId)
+            if (mediaFileId == CurrentMediaFile?.MediaFileId)
             {
                 log.LogMessage($"Deteniendo {CurrentMediaFile.Name}");
                 StopVideo();
             }
         }
 
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F)
+            {
+                IsFullScreen = !IsFullScreen;
 
+                if (IsFullScreen)
+                {
+                    this.WindowStyle = WindowStyle.None;
+                    this.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    this.WindowStyle = WindowStyle.SingleBorderWindow;
+                    this.WindowState = WindowState.Normal;
+                }
+            }
+        }
     }
 }
