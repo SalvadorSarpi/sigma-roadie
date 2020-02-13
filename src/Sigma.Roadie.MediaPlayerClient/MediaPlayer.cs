@@ -57,7 +57,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             log.LogMessage($"Detener todo.");
 
             audios.ForEach(q => q.StopAudio());
-            video.StopVideo();
+            video.StopVideo(true);
         }
 
 
@@ -71,11 +71,8 @@ namespace Sigma.Roadie.MediaPlayerClient
                 if (status != null) playing.Add(status);
             }
 
-            if (video.IsBusy == true && video.CurrentMediaFile != null)
-            {
-                var status = video.GetPlayingMediaStatus();
-                if (status != null) playing.Add(status);
-            }
+            var statusv = video.GetPlayingMediaStatus();
+            if (statusv != null) playing.Add(statusv);
 
             return playing;
         }

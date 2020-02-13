@@ -47,7 +47,7 @@ namespace Sigma.Roadie.MediaPlayerClient
 
             video.MediaEnded += (e, r) =>
               {
-                  StopVideo();
+                  StopVideo(true);
               };
 
             LoadDefaultVideo();
@@ -59,14 +59,17 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public MediaFileStatus GetPlayingMediaStatus()
         {
-            if (IsBusy == false || CurrentMediaFile != null) return null;
+            if (IsBusy == false || CurrentMediaFile == null) return null;
 
             var status = new MediaFileStatus()
             {
                 MediaFileId = CurrentMediaFile.MediaFileId,
-                PlayingFor = video.Position,
-                PlaysIn = TimeSpan.Zero
             };
+
+            Dispatcher.Invoke(() =>
+            {
+                status.PlayingFor = video.Position;
+            });
 
             return status;
         }
@@ -89,11 +92,10 @@ namespace Sigma.Roadie.MediaPlayerClient
             string fileUri = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "mediafiles", model.LocalUri);
             if (!File.Exists(fileUri)) return;
 
-            StopVideo();
-
             CurrentMediaFile = model;
             IsBusy = true;
 
+            StopVideo(false);
 
             if (model.PlayAt.HasValue == false || model.PlayAt?.Ticks == 0)
             {
@@ -130,19 +132,20 @@ namespace Sigma.Roadie.MediaPlayerClient
         }
 
 
-        public void StopVideo()
+        public void StopVideo(bool deep)
         {
             Dispatcher.Invoke(() =>
             {
                 if (dt != null) dt.Stop();
-                DoubleAnimation animationdef = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(2)));
-                defaultVideo.BeginAnimation(MediaElement.OpacityProperty, animationdef);
-                DoubleAnimation animation = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(2)));
-                video.BeginAnimation(MediaElement.OpacityProperty, animation);
 
+                video.Opacity = 0;
                 video.Source = null;
-                CurrentMediaFile = null;
-                IsBusy = false;
+
+                if (deep)
+                {
+                    CurrentMediaFile = null;
+                    IsBusy = false;
+                }
             });
         }
 
@@ -152,7 +155,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             if (mediaFileId == CurrentMediaFile?.MediaFileId)
             {
                 log.LogMessage($"Deteniendo {CurrentMediaFile.Name}");
-                StopVideo();
+                StopVideo(true);
             }
         }
 

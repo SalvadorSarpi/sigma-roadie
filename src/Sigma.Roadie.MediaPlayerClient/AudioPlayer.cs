@@ -40,7 +40,7 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public MediaFileStatus GetPlayingMediaStatus()
         {
-            if (IsBusy == false || CurrentMediaFile != null) return null;
+            if (IsBusy == false || CurrentMediaFile == null) return null;
 
             var status = new MediaFileStatus()
             {
