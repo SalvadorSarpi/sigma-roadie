@@ -38,6 +38,11 @@ namespace Sigma.Roadie.MediaPlayerClient
             InitializeComponent();
 
             this.log = log;
+
+            video.MediaEnded += (e, r) =>
+              {
+                  StopVideo();
+              };
         }
 
 
@@ -51,6 +56,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             StopVideo();
 
             CurrentMediaFile = model;
+            IsBusy = true;
 
             Dispatcher.Invoke(() =>
             {
@@ -66,6 +72,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             {
                 video.Source = null;
                 CurrentMediaFile = null;
+                IsBusy = false;
             });
         }
 

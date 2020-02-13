@@ -53,7 +53,8 @@ namespace Sigma.Roadie.MediaPlayerClient
             MediaPlayerStatus status = new MediaPlayerStatus()
             {
                 Hostname = Environment.MachineName,
-                LocalDateTime = DateTime.Now
+                LocalDateTime = DateTime.Now,
+                MediaFiles = mediaPlayer.GetPlayingMediaStatus()
             };
 
             var json = JsonConvert.SerializeObject(status);

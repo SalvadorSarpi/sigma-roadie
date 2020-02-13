@@ -16,6 +16,7 @@
 
     List<MediaPlayerStatus> status = new List<MediaPlayerStatus>();
 
+
     protected override async Task OnInitializedAsync()
     {
         AvailableSetlists = await SetlistService.GetSetlists();
@@ -115,6 +116,11 @@
         await orchestrator.Clients.All.StopAll();
     }
 
+    bool IsMediaFilePlaying(Guid mediaFileId)
+    {
+        return status.Any(q => q.MediaFiles.Any(m => m.MediaFileId == mediaFileId));
+    }
+
 }
 
 
@@ -157,7 +163,7 @@
                         @stat.Hostname
                     </div>
                     <div class="card-body">
-                        <FormItem Label="Setlist:">
+                        <FormItem Label="Actualizado:">
                             @stat.LocalDateTime
                         </FormItem>
                     </div>
@@ -180,21 +186,44 @@
                     <div class="card-header">
                         @scene.Index / @scene.Scene.Name
                     </div>
+
+                    @if (scene.Scene.MediaFile.Count > 0)
+                    {
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <FormItem Label="Duración:">
-                                    @scene.Scene.Name
-                                </FormItem>
-                                <Sigma.Roadie.Server.Pages.Setlists.Components.SetlistMediaLabel Scene="scene.Scene" />
-                            </div>
-                            <div class="col-md-8">
-                                <button type="button" class="btn btn-success btn-sm" @onclick="() => PlayScene(scene.Scene)"><i class="oi oi-play-circle"></i></button>
-                            </div>
-                        </div>
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Desfase</th>
+                                    <th>Controles</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var media in scene.Scene.MediaFile)
+                                {
+                                <tr>
+                                    <td><Sigma.Roadie.Server.Pages.MediaFiles.Components.MediaFileLabel Media="media" /></td>
+                                    <td>@media.Name</td>
+                                    <td>@media.PlayAt</td>
+                                    <td>
+                                        <button type="button" class="btn btn-success" @onclick="() => PlayMedia(media)"><i class="oi oi-media-play"></i></button>
+
+                                        @if (IsMediaFilePlaying(media.MediaFileId))
+                                        {
+                                            <button type="button" class="btn btn-danger" @onclick="() => StopMedia(media.MediaFileId)"><i class="oi oi-media-stop"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
+                    }
                 </div>
             </div>
+            <br />
         }
     }
 }

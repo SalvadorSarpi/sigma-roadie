@@ -26,6 +26,8 @@ namespace Sigma.Roadie.MediaPlayerClient
 
         public AudioPlayer(ILocalLogger log)
         {
+            this.log = log;
+
             outputDevice = new WaveOutEvent();
             outputDevice.PlaybackStopped += (e, r) =>
             {

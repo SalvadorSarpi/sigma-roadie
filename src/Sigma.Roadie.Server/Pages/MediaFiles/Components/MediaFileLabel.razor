@@ -1,0 +1,16 @@
+﻿@code {
+
+    [Parameter]
+    public MediaFile Media { get; set; }
+
+}
+
+
+@if (Media?.TypeEnum == MediaFileType.Audio)
+{
+    <span class="badge badge-light">Audio</span>
+}
+@if (Media?.TypeEnum == MediaFileType.Video)
+{
+    <span class="badge badge-secondary">Video</span>
+}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Sigma.Roadie.Domain.DataModels.Enums;
+using Sigma.Roadie.Domain.Models;
 
 namespace Sigma.Roadie.MediaPlayerClient
 {
@@ -54,6 +55,37 @@ namespace Sigma.Roadie.MediaPlayerClient
             video.StopVideo();
         }
 
+
+        public List<MediaFileStatus> GetPlayingMediaStatus()
+        {
+            List<MediaFileStatus> playing = new List<MediaFileStatus>();
+
+            foreach(var audio in audios)
+            {
+                if (audio.IsBusy == true && audio.CurrentMediaFile != null)
+                {
+                    playing.Add(new MediaFileStatus()
+                    {
+                        MediaFileId = audio.CurrentMediaFile.MediaFileId,
+                        PlayingFor = TimeSpan.Zero,
+                        PlaysIn = TimeSpan.Zero
+                    });
+                }
+            }
+
+            if (video.IsBusy == true && video.CurrentMediaFile != null)
+            {
+                playing.Add(new MediaFileStatus()
+                {
+                    MediaFileId = video.CurrentMediaFile.MediaFileId,
+                    PlayingFor = TimeSpan.Zero,
+                    PlaysIn = TimeSpan.Zero
+                });
+            }
+
+
+            return playing;
+        }
 
         AudioPlayer GetAvailableAudioPlayer()
         {
