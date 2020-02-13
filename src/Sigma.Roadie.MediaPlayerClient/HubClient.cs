@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sigma.Roadie.MediaPlayerClient
@@ -15,6 +17,8 @@ namespace Sigma.Roadie.MediaPlayerClient
         HubConnection hub;
         MediaPlayer mediaPlayer;
         ILocalLogger log;
+
+        Timer statusTimer;
 
         public HubClient(MediaPlayer mediaPlayer, ILocalLogger log)
         {
@@ -35,6 +39,26 @@ namespace Sigma.Roadie.MediaPlayerClient
             //hub.Closed += Hub_Closed;
 
             hub.StartAsync();
+
+
+            statusTimer = new Timer((e) =>
+            {
+                SendStatus();
+            }, null, 2000, 2000);
+        }
+
+
+        void SendStatus()
+        {
+            MediaPlayerStatus status = new MediaPlayerStatus()
+            {
+                Hostname = Environment.MachineName,
+                LocalDateTime = DateTime.Now
+            };
+
+            var json = JsonConvert.SerializeObject(status);
+
+            hub.InvokeAsync("StatusUpdate", json);
         }
 
 

@@ -10,6 +10,8 @@ namespace Sigma.Roadie.Domain.Models
 
         public string Hostname { get; set; }
 
+        public DateTime LocalDateTime { get; set; }
+
         public List<MediaFileStatus> MediaFiles { get; set; }
 
     }

@@ -16,6 +16,12 @@ namespace Sigma.Roadie.Server.Orquestrator
     {
 
 
+        public Task StatusUpdate(string json)
+        {
+            return Clients.Others.StatusUpdate(json);
+        }
+
+
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.SignalR
 @using Sigma.Roadie.Server.Orquestrator
+@using Microsoft.AspNetCore.SignalR.Client;
 @inject IHubContext<OrchestratorHub, IOrchestratorHub> orchestrator
 
 @code {
@@ -13,6 +14,8 @@
 
     Guid selectedSetlistId { get; set; } = Guid.Empty;
 
+    List<MediaPlayerStatus> status = new List<MediaPlayerStatus>();
+
     protected override async Task OnInitializedAsync()
     {
         AvailableSetlists = await SetlistService.GetSetlists();
@@ -24,7 +27,40 @@
             LoadedSetlist = await SetlistService.GetSetlistById(selectedSetlistId);
         }
 
+        CreateHub();
+
         Loaded = true;
+    }
+
+
+    async Task CreateHub()
+    {
+        if (Loaded) return;
+
+        var hub = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/orchestratorhub")
+                .WithAutomaticReconnect()
+                .Build();
+
+        hub.KeepAliveInterval = TimeSpan.FromSeconds(3);
+
+        hub.On<string>("StatusUpdate", StatusUpdate);
+
+        await hub.StartAsync();
+    }
+
+
+    void StatusUpdate(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return;
+
+        var incomingStatus = JsonConvert.DeserializeObject<MediaPlayerStatus>(json);
+
+        status.RemoveAll(q => q.Hostname == incomingStatus.Hostname);
+
+        status.Add(incomingStatus);
+
+        StateHasChanged();
     }
 
 
@@ -113,20 +149,17 @@
             </div>
         </div>
 
-        @if (LoadedSetlist != null)
+        @foreach(var stat in status)
         {
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        Reproduciendo
+                        @stat.Hostname
                     </div>
                     <div class="card-body">
                         <FormItem Label="Setlist:">
-                            @LoadedSetlist.Name
+                            @stat.LocalDateTime
                         </FormItem>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-danger" @onclick="StopAll"><i class="oi oi-media-stop"></i> Detener todo</button>
                     </div>
                 </div>
             </div>

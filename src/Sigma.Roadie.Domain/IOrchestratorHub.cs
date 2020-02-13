@@ -16,6 +16,8 @@ namespace Sigma.Roadie.Domain
 
         Task StopAll();
 
+        Task StatusUpdate(string json);
+
     }
 
 }
