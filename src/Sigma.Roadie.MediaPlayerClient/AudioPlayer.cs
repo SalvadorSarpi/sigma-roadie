@@ -45,7 +45,7 @@ namespace Sigma.Roadie.MediaPlayerClient
             var status = new MediaFileStatus()
             {
                 MediaFileId = CurrentMediaFile.MediaFileId,
-                PlayingFor = audioFile.CurrentTime,
+                PlayingFor = audioFile?.CurrentTime ?? TimeSpan.Zero,
                 PlaysIn = TimeSpan.Zero
             };
 
