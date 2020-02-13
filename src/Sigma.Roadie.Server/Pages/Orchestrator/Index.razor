@@ -132,47 +132,43 @@
 @if (Loaded)
 {
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Setlist
-                </div>
-                <div class="card-body">
-                    <FormItem Label="Setlist:">
-                        <select class="form-control" @onchange="(e) => selectedSetlistId = Guid.Parse(e.Value.ToString())">
-                            <option value="@Guid.Empty">Ninguno</option>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Setlist
+            </div>
+            <div class="card-body">
+                <FormItem Label="Setlist:">
+                    <select class="form-control" @onchange="(e) => selectedSetlistId = Guid.Parse(e.Value.ToString())">
+                        <option value="@Guid.Empty">Ninguno</option>
 
-                            @foreach (var setlist in AvailableSetlists)
-                            {
-                                <option value="@setlist.SetlistId" selected="@setlist.IsActive">@setlist.Name</option>
-                            }
-                        </select>
-                    </FormItem>
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
-                    <button type="button" class="btn btn-danger" @onclick="StopAll"><i class="oi oi-media-stop"></i>Detener todo</button>
-                </div>
+                        @foreach (var setlist in AvailableSetlists)
+                        {
+                            <option value="@setlist.SetlistId" selected="@setlist.IsActive">@setlist.Name</option>
+                        }
+                    </select>
+                </FormItem>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
+                <button type="button" class="btn btn-danger" @onclick="StopAll"><i class="oi oi-media-stop"></i>Detener todo</button>
             </div>
         </div>
+    </div>
 
-        @foreach(var stat in status)
+    <div class="col-md-6">
+        @foreach(var stat in status.OrderBy(q => q.Hostname))
         {
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        @stat.Hostname
-                    </div>
-                    <div class="card-body">
-                        <FormItem Label="Actualizado:">
-                            @stat.LocalDateTime
-                        </FormItem>
-                    </div>
+            <div class="card">
+                <div class="card-body">
+                    @stat.Hostname (@stat.LocalDateTime)
                 </div>
             </div>
-        }
+
+            }
+        </div>
     </div>
 
     <br />
