@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using Sigma.Roadie.Domain.DataModels;
+using Sigma.Roadie.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,21 @@ namespace Sigma.Roadie.MediaPlayerClient
                 IsBusy = false;
                 CurrentMediaFile = null;
             };
+        }
+
+
+        public MediaFileStatus GetPlayingMediaStatus()
+        {
+            if (IsBusy == false || CurrentMediaFile != null) return null;
+
+            var status = new MediaFileStatus()
+            {
+                MediaFileId = CurrentMediaFile.MediaFileId,
+                PlayingFor = audioFile.CurrentTime,
+                PlaysIn = TimeSpan.Zero
+            };
+
+            return status;
         }
 
 

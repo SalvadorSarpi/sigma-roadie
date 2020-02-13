@@ -38,8 +38,10 @@
     {
         if (Loaded) return;
 
+        var uri = NavigationManager.BaseUri;
+
         var hub = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/orchestratorhub")
+                .WithUrl($"{uri}orchestratorhub")
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -84,7 +86,7 @@
     {
         foreach (var media in scene.MediaFile)
         {
-            if (media.PlayAt.HasValue == false || media.PlayAt?.Ticks == 0)
+            if (media.PlayAt.HasValue == true)
             {
                 await PlayMedia(media);
             }
@@ -151,6 +153,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary" @onclick="LoadSetlist">Cargar setlist</button>
+                    <button type="button" class="btn btn-danger" @onclick="StopAll"><i class="oi oi-media-stop"></i>Detener todo</button>
                 </div>
             </div>
         </div>

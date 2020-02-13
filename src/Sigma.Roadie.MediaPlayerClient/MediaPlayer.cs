@@ -67,27 +67,15 @@ namespace Sigma.Roadie.MediaPlayerClient
 
             foreach(var audio in audios)
             {
-                if (audio.IsBusy == true && audio.CurrentMediaFile != null)
-                {
-                    playing.Add(new MediaFileStatus()
-                    {
-                        MediaFileId = audio.CurrentMediaFile.MediaFileId,
-                        PlayingFor = TimeSpan.Zero,
-                        PlaysIn = TimeSpan.Zero
-                    });
-                }
+                var status = audio.GetPlayingMediaStatus();
+                if (status != null) playing.Add(status);
             }
 
             if (video.IsBusy == true && video.CurrentMediaFile != null)
             {
-                playing.Add(new MediaFileStatus()
-                {
-                    MediaFileId = video.CurrentMediaFile.MediaFileId,
-                    PlayingFor = TimeSpan.Zero,
-                    PlaysIn = TimeSpan.Zero
-                });
+                var status = video.GetPlayingMediaStatus();
+                if (status != null) playing.Add(status);
             }
-
 
             return playing;
         }

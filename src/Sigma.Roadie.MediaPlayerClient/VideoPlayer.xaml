@@ -8,7 +8,9 @@
         Title="MainWindow" Height="450" Width="800" KeyUp="Window_KeyUp" >
     <Grid Background="Black">
 
-        <MediaElement x:Name="video" />
+        <MediaElement x:Name="defaultVideo" />
+        
+        <MediaElement x:Name="video" Opacity="0" />
 
     </Grid>
 </Window>
