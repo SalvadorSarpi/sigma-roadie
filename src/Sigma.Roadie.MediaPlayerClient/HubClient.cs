@@ -38,7 +38,12 @@ namespace Sigma.Roadie.MediaPlayerClient
             hub.On<Guid>("StopMedia", mediaPlayer.StopMedia);
             hub.On("StopAll", mediaPlayer.StopAll);
 
-            //hub.Closed += Hub_Closed;
+            hub.Reconnecting += (df) =>
+              {
+                  
+
+                  return Task.CompletedTask;
+              };
 
             hub.StartAsync();
 
@@ -46,12 +51,14 @@ namespace Sigma.Roadie.MediaPlayerClient
             statusTimer = new Timer((e) =>
             {
                 SendStatus();
-            }, null, 2000, 2000);
+            }, null, 1000, 1000);
         }
 
 
         void SendStatus()
         {
+            if (hub == null || hub.State != HubConnectionState.Connected) return;
+
             MediaPlayerStatus status = new MediaPlayerStatus()
             {
                 Hostname = Environment.MachineName,
@@ -80,12 +87,6 @@ namespace Sigma.Roadie.MediaPlayerClient
             {
                 log.LogMessage("ERROR: " + e.Message);
             }
-        }
-
-
-        Task StopAsync()
-        {
-            return hub.StopAsync();
         }
 
 
