@@ -23,6 +23,7 @@ namespace Sigma.Roadie.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseIIS();
                 });
     }
 }
