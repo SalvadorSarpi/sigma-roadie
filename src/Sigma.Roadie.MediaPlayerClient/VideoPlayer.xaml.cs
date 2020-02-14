@@ -182,5 +182,15 @@ namespace Sigma.Roadie.MediaPlayerClient
                 this.WindowState = WindowState.Normal;
             }
         }
+
+        private void DefaultVideoRepeat(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                defaultVideo.Position = TimeSpan.Zero;
+                //defaultVideo.Play();
+            }
+            catch { }
+        }
     }
 }

@@ -184,7 +184,11 @@
                 <div class="card">
                     <div class="card-header">
                         @scene.Index / @scene.Scene.Name
-                        <button type="button" class="btn btn-primary btn-sm float-right" @onclick="@(() => PlayScene(scene.Scene))"><i class="oi oi-media-play"></i></button>
+
+                        @if (scene.Scene.MediaFile.Count > 0)
+                        { 
+                            <button type="button" class="btn btn-primary btn-sm float-right" @onclick="@(() => PlayScene(scene.Scene))"><i class="oi oi-media-play"></i></button>
+                        }
                     </div>
 
                     @if (scene.Scene.MediaFile.Count > 0)
